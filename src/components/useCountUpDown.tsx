@@ -10,5 +10,5 @@ export const useCountUpDown = () => {
 		setCount(count - 1);
 	};
 
-	return { count, upButtonClick, downButtonClick };
+	return { count, upButtonClick, downButtonClick, setCount };
 };
