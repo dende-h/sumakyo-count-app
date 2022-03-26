@@ -8,6 +8,9 @@ import { dateState } from "../globalState/dateState";
 import { useSelectOnChange } from "../components/useSelectOnChange";
 import { achievementState } from "../globalState/achievementState";
 import { achievementsArray } from "../globalState/achievementsArray";
+import { yearMonthState } from "../globalState/yearMonthState";
+import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
+import Link from "next/link";
 
 type yearMonth = {
 	id?: number;
@@ -41,15 +44,20 @@ const Index = ({ year_month, achievements }) => {
 	const setAchievements = useSetRecoilState(achievementsArray);
 	useEffect(() => {
 		setAchievements(achievements);
+		console.log(achievements);
 	}, [achievements]);
-	console.log(achievements);
+
 	//年月とショップ名をDBから取得
 	const YearMonthArray: yearMonth[] = [...year_month];
 
 	//登録済みの年月のみの配列を取得。後ほどincludeとしてfilterで使用
+	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
 	const selectYearMonthList = YearMonthArray.map((item) => {
 		return item.year_month;
 	});
+	useEffect(() => {
+		setSelectYearMonth(selectYearMonthList);
+	}, [selectYearMonthList]);
 
 	//ショップ名を取得
 	const shopNameList = YearMonthArray.map((item) => {
@@ -97,23 +105,21 @@ const Index = ({ year_month, achievements }) => {
 
 	//新しい月を作成する
 	const monthArray = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
-	const initialYearMonthDate = {
-		year_month: "",
-		shop_name: "塩山店"
-	};
 
-	const [yearMonth, setYearMonth] = useState<yearMonth>(initialYearMonthDate);
+	const [yearMonth, setYearMonth] = useRecoilState<yearMonth>(yearMonthState);
+	console.log(yearMonth);
 	//selectするごとにyearMonthに値をセット
 	const newYear = useSelectOnChange();
 	const newMonth = useSelectOnChange();
 	const newYearMonth = `${newYear.value}/${newMonth.value}`;
+
 	useEffect(() => {
 		setYearMonth({ ...yearMonth, year_month: newYearMonth });
 	}, [newYearMonth]);
 
 	const onMaking = async () => {
 		const { error } = await supabase.from("year_month").insert(yearMonth);
-		setYearMonth(initialYearMonthDate);
+
 		if (error) {
 			console.log(error.message);
 		}
