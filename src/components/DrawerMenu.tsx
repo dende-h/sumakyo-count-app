@@ -32,20 +32,26 @@ export const DrawerMenu = () => {
 				<DrawerOverlay />
 				<DrawerContent>
 					<DrawerCloseButton />
-					<DrawerHeader>Create your account</DrawerHeader>
+					<DrawerHeader textAlign={"center"}>Menu</DrawerHeader>
 
-					<DrawerBody>
+					<DrawerBody textAlign={"center"}>
 						<Stack>
 							<Divider />
 							<Box p={2}>
-								<Link href={"/dashboard"}>
-									<a>実績</a>
+								<Link href={"/"}>
+									<a>実績入力</a>
 								</Link>
 							</Box>
 							<Divider />
 							<Box p={2}>
-								<Link href={"/"}>
-									<a>入力</a>
+								<Link href={"/dashboard"}>
+									<a>トータル実績</a>
+								</Link>
+							</Box>
+							<Divider />
+							<Box p={2}>
+								<Link href={"/viewtable"}>
+									<a>一覧テーブル</a>
 								</Link>
 							</Box>
 							<Divider />

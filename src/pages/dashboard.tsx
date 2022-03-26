@@ -1,6 +1,6 @@
 import { Box, Button, Center, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { ChangeEventHandler } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DashBoardCard } from "../components/DashBoardCard";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
 import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
@@ -8,7 +8,7 @@ import { achievementTotal } from "../globalState/selector/achievementTotalArray"
 
 const DashBoard = () => {
 	const selectOption = useRecoilValue(selectOptionYearMonth);
-	const setSelectYearMonth = useSetRecoilState(onSelectYearMonthState);
+	const [selectYearMonth, setSelectYearMonth] = useRecoilState(onSelectYearMonthState);
 
 	const onSelectYearMonth: ChangeEventHandler<HTMLSelectElement> = (e) => {
 		setSelectYearMonth(e.target.value);
@@ -19,7 +19,7 @@ const DashBoard = () => {
 
 	return (
 		<>
-			<Select onChange={onSelectYearMonth}>
+			<Select onChange={onSelectYearMonth} defaultValue={selectYearMonth}>
 				{selectOption.map((item) => {
 					return (
 						<option key={item} value={`${item}`}>

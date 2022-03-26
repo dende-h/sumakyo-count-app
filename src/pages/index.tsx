@@ -1,4 +1,18 @@
-import { Box, Button, Divider, Input, Select, Stack, Text } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Center,
+	Divider,
+	Flex,
+	HStack,
+	IconButton,
+	Input,
+	Select,
+	Stack,
+	Text,
+	Wrap,
+	WrapItem
+} from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useCountUpDown } from "../components/useCountUpDown";
@@ -127,63 +141,198 @@ const Index = ({ year_month, achievements }) => {
 
 	return (
 		<>
-			<Box>
+			<Box m={4}>
 				<Stack>
-					<Text>新しい月を作成する</Text>
-					<Select onChange={newYear.onChangeSelect} placeholder="新しい年を選択">
-						<option value="2022">2022年</option>
-					</Select>
-					<Select onChange={newMonth.onChangeSelect} placeholder="新しい月を選択">
-						{monthArray.map((item) => {
-							return (
-								<option key={item} value={item}>
-									{item}月
-								</option>
-							);
-						})}
-					</Select>
-
-					<Box>
-						<Button onClick={onMaking}>作成</Button>
-					</Box>
-					<Text>{`${shopName}スマホ教室実績入力フォーム`}</Text>
+					<Text fontSize={"lg"} fontWeight="bold">{`${shopName}実績入力フォーム`}</Text>
 					<Divider />
-					<Box>
+
+					<Text fontSize={"lg"} fontWeight={"bold"}>
+						実績日を選択
+					</Text>
+					<Box p={2}>
 						<CustomDatePickerCalendar />
 					</Box>
+					<Wrap>
+						<WrapItem>
+							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+								<Text fontSize={"lg"} fontWeight="bold">
+									講座開催数
+								</Text>
+								<Text fontSize={"x-large"} fontWeight={"bold"}>
+									{seminarCount.count}
+								</Text>
+								<Center>
+									<HStack spacing={4} textAlign="center">
+										<Button
+											onClick={seminarCount.upButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											＋
+										</Button>
+										<Button
+											onClick={seminarCount.downButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											－
+										</Button>
+									</HStack>
+								</Center>
+							</Stack>
+						</WrapItem>
+						<WrapItem>
+							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+								<Text fontSize={"lg"} fontWeight="bold">
+									ユニークユーザー数
+								</Text>
+								<Text fontSize={"x-large"} fontWeight={"bold"}>
+									{uniqueUserCount.count}
+								</Text>
+								<Center>
+									<HStack spacing={4} textAlign="center">
+										<Button
+											onClick={uniqueUserCount.upButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											＋
+										</Button>
+										<Button
+											onClick={uniqueUserCount.downButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											－
+										</Button>
+									</HStack>
+								</Center>
+							</Stack>
+						</WrapItem>
+						<WrapItem>
+							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+								<Text fontSize={"lg"} fontWeight="bold">
+									新規ユーザー数
+								</Text>
+								<Text fontSize={"x-large"} fontWeight={"bold"}>
+									{newUserCount.count}
+								</Text>
+								<Center>
+									<HStack spacing={4} textAlign="center">
+										<Button
+											onClick={newUserCount.upButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											＋
+										</Button>
+										<Button
+											onClick={newUserCount.downButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											－
+										</Button>
+									</HStack>
+								</Center>
+							</Stack>
+						</WrapItem>
+						<WrapItem>
+							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+								<Text fontSize={"lg"} fontWeight="bold">
+									MX講座開催数
+								</Text>
+								<Text fontSize={"x-large"} fontWeight={"bold"}>
+									{mxSeminarCount.count}
+								</Text>
+								<Center>
+									<HStack spacing={4} textAlign="center">
+										<Button
+											onClick={mxSeminarCount.upButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											＋
+										</Button>
+										<Button
+											onClick={mxSeminarCount.downButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											－
+										</Button>
+									</HStack>
+								</Center>
+							</Stack>
+						</WrapItem>
+						<WrapItem>
+							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+								<Text fontSize={"lg"} fontWeight="bold">
+									MX講座ユーザー数
+								</Text>
+								<Text fontSize={"x-large"} fontWeight={"bold"}>
+									{mxUserCount.count}
+								</Text>
+								<Center>
+									<HStack spacing={4} textAlign="center">
+										<Button
+											onClick={mxUserCount.upButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											＋
+										</Button>
+										<Button
+											onClick={mxUserCount.downButtonClick}
+											borderRadius="full"
+											colorScheme={"twitter"}
+											fontSize="lg"
+										>
+											－
+										</Button>
+									</HStack>
+								</Center>
+							</Stack>
+						</WrapItem>
+					</Wrap>
 					<Box>
-						<Text>講座開催数</Text>
-						<Text>{seminarCount.count}</Text>
-						<Button onClick={seminarCount.upButtonClick}>Up</Button>
-						<Button onClick={seminarCount.downButtonClick}>down</Button>
+						<Button onClick={onSubmit} colorScheme="teal">
+							送信
+						</Button>
 					</Box>
-					<Box>
-						<Text>ユニークユーザー数</Text>
-						<Text>{uniqueUserCount.count}</Text>
-						<Button onClick={uniqueUserCount.upButtonClick}>Up</Button>
-						<Button onClick={uniqueUserCount.downButtonClick}>down</Button>
-					</Box>
-					<Box>
-						<Text>新規ユーザー数</Text>
-						<Text>{newUserCount.count}</Text>
-						<Button onClick={newUserCount.upButtonClick}>Up</Button>
-						<Button onClick={newUserCount.downButtonClick}>down</Button>
-					</Box>
-					<Box>
-						<Text>MX講座開催数</Text>
-						<Text>{mxSeminarCount.count}</Text>
-						<Button onClick={mxSeminarCount.upButtonClick}>Up</Button>
-						<Button onClick={mxSeminarCount.downButtonClick}>down</Button>
-					</Box>
-					<Box>
-						<Text>MX講座ユーザー数</Text>
-						<Text>{mxUserCount.count}</Text>
-						<Button onClick={mxUserCount.upButtonClick}>Up</Button>
-						<Button onClick={mxUserCount.downButtonClick}>down</Button>
-					</Box>
-					<Box>
-						<Button onClick={onSubmit}>送信</Button>
-					</Box>
+					<Stack>
+						<Divider />
+						<Text fontSize={"lg"} fontWeight="bold">
+							新しい月を作成する
+						</Text>
+
+						<Select onChange={newYear.onChangeSelect} placeholder="新しい年を選択" backgroundColor={"white"}>
+							<option value="2022">2022年</option>
+						</Select>
+						<Select onChange={newMonth.onChangeSelect} placeholder="新しい月を選択" backgroundColor={"white"}>
+							{monthArray.map((item) => {
+								return (
+									<option key={item} value={item}>
+										{item}月
+									</option>
+								);
+							})}
+						</Select>
+						<Box>
+							<Button onClick={onMaking} colorScheme="teal">
+								作成
+							</Button>
+						</Box>
+					</Stack>
 				</Stack>
 			</Box>
 		</>
