@@ -37,19 +37,19 @@ export const DrawerMenu = () => {
 					<DrawerBody textAlign={"center"}>
 						<Stack>
 							<Divider />
-							<Box p={2}>
+							<Box p={2} onClick={onClose}>
 								<Link href={"/"}>
 									<a>実績入力</a>
 								</Link>
 							</Box>
 							<Divider />
-							<Box p={2}>
+							<Box p={2} onClick={onClose}>
 								<Link href={"/dashboard"}>
 									<a>トータル実績</a>
 								</Link>
 							</Box>
 							<Divider />
-							<Box p={2}>
+							<Box p={2} onClick={onClose}>
 								<Link href={"/viewtable"}>
 									<a>一覧テーブル</a>
 								</Link>

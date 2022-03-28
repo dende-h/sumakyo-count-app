@@ -1,14 +1,22 @@
 import { selector } from "recoil";
 import { achievementsArray } from "../achievementsArray";
+import { onSelectedShopName } from "../onSelectedShopName";
 import { onSelectYearMonthState } from "../onSelectYearMonthState";
 
-export const achievementTotal = selector({
-	key: "achievementTotal ",
+export const achievementTotalArray = selector({
+	key: "achievementTotalArray ",
 	get: ({ get }) => {
+		//選択した年月のatomを取得
 		const onSelectYearMonth = get(onSelectYearMonthState);
+		//選択した店舗のatomを取得
+		const onSelectShopName = get(onSelectedShopName);
+		//抽出のための初期配列生成
 		const initialArray = get(achievementsArray).filter((item) => {
-			//実績日に指定して年月を含むものだけ返す
-			return item.date_of_results.includes(onSelectYearMonth);
+			if (onSelectShopName === "全店舗") {
+				//全店舗の場合実績日に指定して年月を含むものだけ返す
+				return item.date_of_results.includes(onSelectYearMonth);
+			}
+			return item.date_of_results.includes(onSelectYearMonth) && item.shop_name === onSelectShopName;
 		});
 
 		// u_usercountの配列

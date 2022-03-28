@@ -9,7 +9,8 @@ const initialDate: userCount[] = [
 		seminar_count: 0,
 		mx_seminar_count: 0,
 		mx_usercount: 0,
-		date_of_results: ""
+		date_of_results: "",
+		shop_name: ""
 	}
 ];
 

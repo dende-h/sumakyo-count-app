@@ -24,14 +24,16 @@ import { achievementState } from "../globalState/achievementState";
 import { achievementsArray } from "../globalState/achievementsArray";
 import { yearMonthState } from "../globalState/yearMonthState";
 import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
-import Link from "next/link";
 
-type yearMonth = {
+import toast from "react-hot-toast";
+import { shopNameArray } from "../globalState/shopNameArray";
+import { InputItemsCard } from "../components/InputItemsCard";
+
+export type yearMonth = {
 	id?: number;
 	created_at?: string;
 	year_month: string;
 	user_id?: string;
-	shop_name: string;
 };
 
 export type userCount = {
@@ -45,6 +47,7 @@ export type userCount = {
 	user_id?: number;
 	year_month_id?: number;
 	date_of_results: string;
+	shop_name: string;
 };
 
 //supabaseのAPI定義
@@ -54,33 +57,39 @@ const supabase: SupabaseClient = createClient(
 );
 
 const Index = ({ year_month, achievements }) => {
+	const [loading, setLoading] = useState(false);
+
 	//実績データの取得とglobalStateへの登録
 	const setAchievements = useSetRecoilState(achievementsArray);
 	useEffect(() => {
 		setAchievements(achievements);
 		console.log(achievements);
-	}, [achievements]);
+	}, []);
 
-	//年月とショップ名をDBから取得
-	const YearMonthArray: yearMonth[] = [...year_month];
+	//年月とショップ名をDBから取得ものを配列のStateとして保持
+	const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
 
-	//登録済みの年月のみの配列を取得。後ほどincludeとしてfilterで使用
+	//登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
 	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	const selectYearMonthList = YearMonthArray.map((item) => {
-		return item.year_month;
-	});
 	useEffect(() => {
+		const selectYearMonthList = yearMonthArray.map((item) => {
+			return item.year_month;
+		});
 		setSelectYearMonth(selectYearMonthList);
-	}, [selectYearMonthList]);
+	}, [yearMonthArray]); //yearMonthが更新されるたびに更新
 
-	//ショップ名を取得
-	const shopNameList = YearMonthArray.map((item) => {
-		return item.shop_name;
-	});
-	const shopName = shopNameList[0]; //塩山店
+	// //ショップ名を取得
+	// const shopNameList = yearMonthArray.map((item) => {
+	// 	return item.shop_name;
+	// });
+	// const shopName = shopNameList[0]; //塩山店
 
 	//datepickerで選択した日付（文字列型）
 	const inputDate = useRecoilValue(dateState);
+
+	//入力対象の店舗名配列
+	const shopNameList = useRecoilValue(shopNameArray);
+	const selectShopName = useSelectOnChange();
 
 	//それぞれの実績入力データ（カウントアップダウン）（数値型）
 	const seminarCount = useCountUpDown();
@@ -88,12 +97,14 @@ const Index = ({ year_month, achievements }) => {
 	const newUserCount = useCountUpDown();
 	const mxSeminarCount = useCountUpDown();
 	const mxUserCount = useCountUpDown();
+	//配列化
+	const inputItemsArray = [seminarCount, uniqueUserCount, newUserCount, mxSeminarCount, mxUserCount];
+	const itemLabel = ["講座開催数", "ユニークユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
 
 	//データを書き込むためのオブジェクト定義
-	const [achievement, setAchievement] = useRecoilState(achievementState);
+	const [achievement, setAchievement] = useState<userCount>();
 
-	//送信ボタンを押したときのinsartAPI
-	const onSubmit = async () => {
+	useEffect(() => {
 		setAchievement({
 			...achievement,
 			u_usercount: uniqueUserCount.count,
@@ -101,10 +112,25 @@ const Index = ({ year_month, achievements }) => {
 			seminar_count: seminarCount.count,
 			mx_seminar_count: mxSeminarCount.count,
 			mx_usercount: mxUserCount.count,
-			date_of_results: inputDate
+			date_of_results: inputDate,
+			shop_name: selectShopName.value
 		});
+	}, [
+		uniqueUserCount.count,
+		newUserCount.count,
+		seminarCount.count,
+		mxSeminarCount.count,
+		mxUserCount.count,
+		inputDate,
+		selectShopName.value
+	]);
+
+	//送信ボタンを押したときのinsartAPI
+	const onSubmit = async () => {
+		setLoading(true);
 
 		const { error } = await supabase.from("achievements").insert(achievement);
+
 		//カウントデータの初期化
 		seminarCount.setCount(0);
 		uniqueUserCount.setCount(0);
@@ -113,14 +139,23 @@ const Index = ({ year_month, achievements }) => {
 		mxUserCount.setCount(0);
 		if (error) {
 			//エラー時のコンソール表示
-			console.log(error);
+			toast.error(error.message);
+			setLoading(false);
+		} else {
+			toast.success("登録完了しました");
+			setLoading(false);
 		}
 	};
 
 	//新しい月を作成する
+	//月をselect用の配列を用意
 	const monthArray = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+	const initialYearMonthData = {
+		year_month: "",
+		shop_name: "塩山店"
+	};
 
-	const [yearMonth, setYearMonth] = useRecoilState<yearMonth>(yearMonthState);
+	const [yearMonth, setYearMonth] = useState<yearMonth>(initialYearMonthData);
 	console.log(yearMonth);
 	//selectするごとにyearMonthに値をセット
 	const newYear = useSelectOnChange();
@@ -133,9 +168,10 @@ const Index = ({ year_month, achievements }) => {
 
 	const onMaking = async () => {
 		const { error } = await supabase.from("year_month").insert(yearMonth);
-
+		setYearMonthArray([...yearMonthArray, yearMonth]);
+		toast.success("新しい年月を追加しました");
 		if (error) {
-			console.log(error.message);
+			toast.error(error.message);
 		}
 	};
 
@@ -143,169 +179,45 @@ const Index = ({ year_month, achievements }) => {
 		<>
 			<Box m={4}>
 				<Stack>
-					<Text fontSize={"lg"} fontWeight="bold">{`${shopName}実績入力フォーム`}</Text>
+					<Text fontSize={"lg"} fontWeight="bold">
+						実績入力フォーム
+					</Text>
 					<Divider />
 
 					<Text fontSize={"lg"} fontWeight={"bold"}>
 						実績日を選択
 					</Text>
-					<Box p={2}>
+					<Stack p={2}>
 						<CustomDatePickerCalendar />
-					</Box>
+
+						<Select onChange={selectShopName.onChangeSelect} placeholder="店舗を選択" backgroundColor={"white"}>
+							{shopNameList.map((item) => {
+								return (
+									<option key={item} value={item}>
+										{item}
+									</option>
+								);
+							})}
+						</Select>
+					</Stack>
 					<Wrap>
-						<WrapItem>
-							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-								<Text fontSize={"lg"} fontWeight="bold">
-									講座開催数
-								</Text>
-								<Text fontSize={"x-large"} fontWeight={"bold"}>
-									{seminarCount.count}
-								</Text>
-								<Center>
-									<HStack spacing={4} textAlign="center">
-										<Button
-											onClick={seminarCount.upButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											＋
-										</Button>
-										<Button
-											onClick={seminarCount.downButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											－
-										</Button>
-									</HStack>
-								</Center>
-							</Stack>
-						</WrapItem>
-						<WrapItem>
-							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-								<Text fontSize={"lg"} fontWeight="bold">
-									ユニークユーザー数
-								</Text>
-								<Text fontSize={"x-large"} fontWeight={"bold"}>
-									{uniqueUserCount.count}
-								</Text>
-								<Center>
-									<HStack spacing={4} textAlign="center">
-										<Button
-											onClick={uniqueUserCount.upButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											＋
-										</Button>
-										<Button
-											onClick={uniqueUserCount.downButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											－
-										</Button>
-									</HStack>
-								</Center>
-							</Stack>
-						</WrapItem>
-						<WrapItem>
-							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-								<Text fontSize={"lg"} fontWeight="bold">
-									新規ユーザー数
-								</Text>
-								<Text fontSize={"x-large"} fontWeight={"bold"}>
-									{newUserCount.count}
-								</Text>
-								<Center>
-									<HStack spacing={4} textAlign="center">
-										<Button
-											onClick={newUserCount.upButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											＋
-										</Button>
-										<Button
-											onClick={newUserCount.downButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											－
-										</Button>
-									</HStack>
-								</Center>
-							</Stack>
-						</WrapItem>
-						<WrapItem>
-							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-								<Text fontSize={"lg"} fontWeight="bold">
-									MX講座開催数
-								</Text>
-								<Text fontSize={"x-large"} fontWeight={"bold"}>
-									{mxSeminarCount.count}
-								</Text>
-								<Center>
-									<HStack spacing={4} textAlign="center">
-										<Button
-											onClick={mxSeminarCount.upButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											＋
-										</Button>
-										<Button
-											onClick={mxSeminarCount.downButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											－
-										</Button>
-									</HStack>
-								</Center>
-							</Stack>
-						</WrapItem>
-						<WrapItem>
-							<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-								<Text fontSize={"lg"} fontWeight="bold">
-									MX講座ユーザー数
-								</Text>
-								<Text fontSize={"x-large"} fontWeight={"bold"}>
-									{mxUserCount.count}
-								</Text>
-								<Center>
-									<HStack spacing={4} textAlign="center">
-										<Button
-											onClick={mxUserCount.upButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											＋
-										</Button>
-										<Button
-											onClick={mxUserCount.downButtonClick}
-											borderRadius="full"
-											colorScheme={"twitter"}
-											fontSize="lg"
-										>
-											－
-										</Button>
-									</HStack>
-								</Center>
-							</Stack>
-						</WrapItem>
+						{inputItemsArray.map((item, Index) => {
+							const label = itemLabel[Index];
+							return (
+								<WrapItem>
+									<InputItemsCard itemLabel={label} inputItem={item} loading={loading} />
+								</WrapItem>
+							);
+						})}
 					</Wrap>
+
 					<Box>
-						<Button onClick={onSubmit} colorScheme="teal">
+						<Button
+							onClick={onSubmit}
+							colorScheme="teal"
+							isDisabled={loading || selectShopName.value === ""}
+							isLoading={loading}
+						>
 							送信
 						</Button>
 					</Box>
@@ -328,7 +240,7 @@ const Index = ({ year_month, achievements }) => {
 							})}
 						</Select>
 						<Box>
-							<Button onClick={onMaking} colorScheme="teal">
+							<Button onClick={onMaking} colorScheme="teal" isDisabled={newYear.value === "" || newMonth.value === ""}>
 								作成
 							</Button>
 						</Box>
@@ -339,7 +251,7 @@ const Index = ({ year_month, achievements }) => {
 	);
 };
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
 	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 	if (year_monthError) {
 		console.log(year_monthError.message);
@@ -348,6 +260,6 @@ export const getServerSideProps = async () => {
 	if (achievementsError) {
 		console.log(achievementsError.message);
 	}
-	return { props: { year_month, achievements } };
+	return { props: { year_month, achievements }, revalidate: 60 };
 };
 export default Index;
