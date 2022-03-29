@@ -1,7 +1,7 @@
-import { Select, Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, Box, Stack } from "@chakra-ui/react";
+import { Select, Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, Box, Stack, Text } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { ChangeEventHandler, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { yearMonth } from ".";
 import { useSelectOnChange } from "../components/useSelectOnChange";
 import { achievementsArray } from "../globalState/achievementsArray";
@@ -18,8 +18,8 @@ const supabase: SupabaseClient = createClient(
 );
 
 const ViewTable = ({ achievements, year_month }) => {
-	//年月とショップ名をDBから取得ものを配列のStateとして保持
-	const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
+	//年月とショップ名をDBから取得ものを配列
+	const yearMonthArray: yearMonth[] = [...year_month];
 
 	//登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
 	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
@@ -38,7 +38,7 @@ const ViewTable = ({ achievements, year_month }) => {
 	//作成された年月をselectのopとして利用
 	const selectOption = useRecoilValue(selectOptionYearMonth);
 	//選択されている年月用のstate
-	const [selectedYearMonth, setSelectedYearMonth] = useRecoilState(onSelectYearMonthState);
+	const setSelectedYearMonth = useSetRecoilState(onSelectYearMonthState);
 
 	const selectYearMonth = useSelectOnChange();
 	useEffect(() => {
@@ -48,7 +48,7 @@ const ViewTable = ({ achievements, year_month }) => {
 	//店舗selectのopとして利用
 	const selectOptionShopName = useRecoilValue(shopNameArray);
 	//選択されている店舗用state
-	const [onSelectShopName, setOnSelectShopName] = useRecoilState(onSelectedShopName);
+	const setOnSelectShopName = useSetRecoilState(onSelectedShopName);
 	const selectShopName = useSelectOnChange();
 	useEffect(() => {
 		setOnSelectShopName(selectShopName.value);
@@ -56,10 +56,12 @@ const ViewTable = ({ achievements, year_month }) => {
 
 	//表示する実績のselector、年月と店舗の選択によってfilterされる
 	const showAchievements = useRecoilValue(showAchievementsTableArray);
-	console.log(showAchievements);
 
 	return (
 		<>
+			<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
+				店舗と年月を選択
+			</Text>
 			<Stack p={2}>
 				<Select
 					onChange={selectYearMonth.onChangeSelect}
@@ -90,6 +92,10 @@ const ViewTable = ({ achievements, year_month }) => {
 					})}
 				</Select>
 			</Stack>
+			<br />
+			<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
+				実施日別実績テーブル
+			</Text>
 			<Box overflowX="scroll">
 				<Table variant="simple">
 					<TableCaption>月別実績一覧テーブル</TableCaption>
@@ -142,11 +148,9 @@ const ViewTable = ({ achievements, year_month }) => {
 export const getServerSideProps = async () => {
 	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 	if (year_monthError) {
-		console.log(year_monthError.message);
 	}
 	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
 	if (achievementsError) {
-		console.log(achievementsError.message);
 	}
 	return { props: { achievements, year_month } };
 };

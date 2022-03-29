@@ -1,30 +1,13 @@
-import {
-	Box,
-	Button,
-	Center,
-	Divider,
-	Flex,
-	HStack,
-	IconButton,
-	Input,
-	Select,
-	Stack,
-	Text,
-	Wrap,
-	WrapItem
-} from "@chakra-ui/react";
+import { Box, Button, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useCountUpDown } from "../components/useCountUpDown";
 import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { dateState } from "../globalState/dateState";
 import { useSelectOnChange } from "../components/useSelectOnChange";
-import { achievementState } from "../globalState/achievementState";
 import { achievementsArray } from "../globalState/achievementsArray";
-import { yearMonthState } from "../globalState/yearMonthState";
 import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
-
 import toast from "react-hot-toast";
 import { shopNameArray } from "../globalState/shopNameArray";
 import { InputItemsCard } from "../components/InputItemsCard";
@@ -63,7 +46,6 @@ const Index = ({ year_month, achievements }) => {
 	const setAchievements = useSetRecoilState(achievementsArray);
 	useEffect(() => {
 		setAchievements(achievements);
-		console.log(achievements);
 	}, []);
 
 	//年月とショップ名をDBから取得ものを配列のStateとして保持
@@ -78,17 +60,15 @@ const Index = ({ year_month, achievements }) => {
 		setSelectYearMonth(selectYearMonthList);
 	}, [yearMonthArray]); //yearMonthが更新されるたびに更新
 
-	// //ショップ名を取得
-	// const shopNameList = yearMonthArray.map((item) => {
-	// 	return item.shop_name;
-	// });
-	// const shopName = shopNameList[0]; //塩山店
-
 	//datepickerで選択した日付（文字列型）
 	const inputDate = useRecoilValue(dateState);
 
 	//入力対象の店舗名配列
 	const shopNameList = useRecoilValue(shopNameArray);
+	//全店舗は入力対象から除外
+	const inputShopName = shopNameList.filter((item) => {
+		return item !== "全店舗";
+	});
 	const selectShopName = useSelectOnChange();
 
 	//それぞれの実績入力データ（カウントアップダウン）（数値型）
@@ -156,7 +136,7 @@ const Index = ({ year_month, achievements }) => {
 	};
 
 	const [yearMonth, setYearMonth] = useState<yearMonth>(initialYearMonthData);
-	console.log(yearMonth);
+
 	//selectするごとにyearMonthに値をセット
 	const newYear = useSelectOnChange();
 	const newMonth = useSelectOnChange();
@@ -179,19 +159,19 @@ const Index = ({ year_month, achievements }) => {
 		<>
 			<Box m={4}>
 				<Stack>
-					<Text fontSize={"lg"} fontWeight="bold">
+					<Text fontSize={"x-large"} fontWeight="bold">
 						実績入力フォーム
 					</Text>
-					<Divider />
+					<Divider borderColor={"gray.500"} />
 
 					<Text fontSize={"lg"} fontWeight={"bold"}>
-						実績日を選択
+						実績日と店舗を選択
 					</Text>
 					<Stack p={2}>
 						<CustomDatePickerCalendar />
 
 						<Select onChange={selectShopName.onChangeSelect} placeholder="店舗を選択" backgroundColor={"white"}>
-							{shopNameList.map((item) => {
+							{inputShopName.map((item) => {
 								return (
 									<option key={item} value={item}>
 										{item}
@@ -200,6 +180,9 @@ const Index = ({ year_month, achievements }) => {
 							})}
 						</Select>
 					</Stack>
+					<Text fontSize={"lg"} fontWeight={"bold"}>
+						実績を入力
+					</Text>
 					<Wrap>
 						{inputItemsArray.map((item, Index) => {
 							const label = itemLabel[Index];
@@ -222,7 +205,8 @@ const Index = ({ year_month, achievements }) => {
 						</Button>
 					</Box>
 					<Stack>
-						<Divider />
+						<br />
+						<Divider borderColor={"gray.500"} />
 						<Text fontSize={"lg"} fontWeight="bold">
 							新しい月を作成する
 						</Text>
@@ -254,11 +238,9 @@ const Index = ({ year_month, achievements }) => {
 export const getStaticProps = async () => {
 	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 	if (year_monthError) {
-		console.log(year_monthError.message);
 	}
 	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
 	if (achievementsError) {
-		console.log(achievementsError.message);
 	}
 	return { props: { year_month, achievements }, revalidate: 60 };
 };

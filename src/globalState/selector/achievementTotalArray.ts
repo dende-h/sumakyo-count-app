@@ -40,9 +40,10 @@ export const achievementTotalArray = selector({
 			return item.mx_usercount;
 		});
 		const countArrays = [
+			seminarCountArray,
 			uniqueUserCountArray,
 			newUserCountArray,
-			seminarCountArray,
+
 			mxSeminarCountArray,
 			mxUserCountArray
 		];
@@ -55,7 +56,7 @@ export const achievementTotalArray = selector({
 			return totalCalc;
 		};
 		//プロパティ名を付けたオブジェクト配列を生成
-		const labelName = ["ユニークユーザー数", "新規ユーザー数", "講座開催数", "MX講座開催数", "MX講座ユーザー数"];
+		const labelName = ["講座開催数", "ユニークユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
 		const countTotalArray = countArrays.map((item, index) => {
 			return { label: labelName[index], total: totalCalcFunc(item) };
 		});
