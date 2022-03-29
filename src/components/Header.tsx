@@ -1,6 +1,5 @@
 import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
 import { memo } from "react";
-import { DarkModeSwitch } from "./DarkModeSwitch";
 import { DrawerMenu } from "./DrawerMenu";
 
 export const Header = memo(() => {
@@ -12,10 +11,9 @@ export const Header = memo(() => {
 				</Text>
 
 				<Spacer />
-				<Box marginRight={16} lineHeight={["50px", "60px", "70px"]}>
+				<Box marginRight={4} lineHeight={["50px", "60px", "70px"]}>
 					<DrawerMenu />
 				</Box>
-				<DarkModeSwitch />
 			</Flex>
 		</>
 	);
