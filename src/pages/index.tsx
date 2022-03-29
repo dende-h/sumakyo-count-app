@@ -187,7 +187,7 @@ const Index = ({ year_month, achievements }) => {
 						{inputItemsArray.map((item, Index) => {
 							const label = itemLabel[Index];
 							return (
-								<WrapItem>
+								<WrapItem key={Index}>
 									<InputItemsCard itemLabel={label} inputItem={item} loading={loading} />
 								</WrapItem>
 							);
