@@ -1,14 +1,22 @@
 import { selector } from "recoil";
 import { achievementsArray } from "../achievementsArray";
+import { onSelectedShopName } from "../onSelectedShopName";
 import { onSelectYearMonthState } from "../onSelectYearMonthState";
 
-export const achievementTotal = selector({
-	key: "achievementTotal ",
+export const achievementTotalArray = selector({
+	key: "achievementTotalArray ",
 	get: ({ get }) => {
+		//選択した年月のatomを取得
 		const onSelectYearMonth = get(onSelectYearMonthState);
+		//選択した店舗のatomを取得
+		const onSelectShopName = get(onSelectedShopName);
+		//抽出のための初期配列生成
 		const initialArray = get(achievementsArray).filter((item) => {
-			//実績日に指定して年月を含むものだけ返す
-			return item.date_of_results.includes(onSelectYearMonth);
+			if (onSelectShopName === "全店舗") {
+				//全店舗の場合実績日に指定して年月を含むものだけ返す
+				return item.date_of_results.includes(onSelectYearMonth);
+			}
+			return item.date_of_results.includes(onSelectYearMonth) && item.shop_name === onSelectShopName;
 		});
 
 		// u_usercountの配列
@@ -32,9 +40,10 @@ export const achievementTotal = selector({
 			return item.mx_usercount;
 		});
 		const countArrays = [
+			seminarCountArray,
 			uniqueUserCountArray,
 			newUserCountArray,
-			seminarCountArray,
+
 			mxSeminarCountArray,
 			mxUserCountArray
 		];
@@ -47,7 +56,7 @@ export const achievementTotal = selector({
 			return totalCalc;
 		};
 		//プロパティ名を付けたオブジェクト配列を生成
-		const labelName = ["ユニークユーザー数", "新規ユーザー数", "講座開催数", "MX講座開催数", "MX講座ユーザー数"];
+		const labelName = ["講座開催数", "ユニークユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
 		const countTotalArray = countArrays.map((item, index) => {
 			return { label: labelName[index], total: totalCalcFunc(item) };
 		});
