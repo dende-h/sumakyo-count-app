@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const useCountUpDown = () => {
 	const [count, setCount] = useState<number>(0);
 
-	const upButtonClick = () => {
+	const upButtonClick = useCallback(() => {
 		setCount(count + 1);
-	};
-	const downButtonClick = () => {
+	}, []);
+	const downButtonClick = useCallback(() => {
 		setCount(count - 1);
-	};
+	}, []);
 
 	return { count, upButtonClick, downButtonClick, setCount };
 };

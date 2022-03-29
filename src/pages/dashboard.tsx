@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { yearMonth } from ".";
 import { DashBoardCard } from "../components/DashBoardCard";
-import { useSelectOnChange } from "../components/useSelectOnChange";
+import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import { achievementsArray } from "../globalState/achievementsArray";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";

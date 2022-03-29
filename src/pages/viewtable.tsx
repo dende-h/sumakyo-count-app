@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { yearMonth } from ".";
-import { useSelectOnChange } from "../components/useSelectOnChange";
+import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import { achievementsArray } from "../globalState/achievementsArray";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";

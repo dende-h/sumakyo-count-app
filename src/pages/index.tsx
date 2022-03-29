@@ -1,11 +1,11 @@
 import { Box, Button, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useCountUpDown } from "../components/useCountUpDown";
+import { useCountUpDown } from "../hooks/useCountUpDown";
 import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { dateState } from "../globalState/dateState";
-import { useSelectOnChange } from "../components/useSelectOnChange";
+import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import { achievementsArray } from "../globalState/achievementsArray";
 import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import toast from "react-hot-toast";

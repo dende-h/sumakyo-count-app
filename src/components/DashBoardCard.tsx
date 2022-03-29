@@ -1,11 +1,12 @@
-import { Box, Divider, Stack, Text } from "@chakra-ui/react";
+import { Divider, Stack, Text } from "@chakra-ui/react";
+import { memo } from "react";
 
 type Props = {
 	label: string;
 	total: number;
 };
 
-export const DashBoardCard = (props: Props) => {
+export const DashBoardCard = memo((props: Props) => {
 	const { label, total } = props;
 
 	return (
@@ -22,4 +23,4 @@ export const DashBoardCard = (props: Props) => {
 			</Stack>
 		</>
 	);
-};
+});

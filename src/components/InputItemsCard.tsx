@@ -1,5 +1,5 @@
-import { Box, Button, Center, Divider, HStack, Stack, Text } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
+import { Button, Center, Divider, HStack, Stack, Text } from "@chakra-ui/react";
+import { Dispatch, memo, SetStateAction } from "react";
 
 type Props = {
 	itemLabel: string;
@@ -11,7 +11,7 @@ type Props = {
 	};
 	loading: boolean;
 };
-export const InputItemsCard = (props: Props) => {
+export const InputItemsCard = memo((props: Props) => {
 	const { itemLabel, inputItem, loading } = props;
 
 	return (
@@ -48,4 +48,4 @@ export const InputItemsCard = (props: Props) => {
 			</Stack>
 		</>
 	);
-};
+});

@@ -2,7 +2,6 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 import {
 	Drawer,
 	DrawerBody,
-	DrawerFooter,
 	DrawerHeader,
 	DrawerOverlay,
 	DrawerContent,
@@ -10,13 +9,13 @@ import {
 	IconButton,
 	useDisclosure,
 	Stack,
-	Button,
 	Box,
 	Divider
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { memo } from "react";
 
-export const DrawerMenu = () => {
+export const DrawerMenu = memo(() => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	return (
 		<>
@@ -27,6 +26,7 @@ export const DrawerMenu = () => {
 				_hover={{ opacity: 0.6 }}
 				icon={<HamburgerIcon />}
 				onClick={onOpen}
+				boxSize={[6, 8, 10]}
 			/>
 			<Drawer isOpen={isOpen} onClose={onClose}>
 				<DrawerOverlay />
@@ -61,4 +61,4 @@ export const DrawerMenu = () => {
 			</Drawer>
 		</>
 	);
-};
+});
