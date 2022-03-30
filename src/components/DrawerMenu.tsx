@@ -14,9 +14,12 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { memo } from "react";
+import { useSetRecoilState } from "recoil";
+import { isShowTable } from "../globalState/isShowTable";
 
 export const DrawerMenu = memo(() => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	return (
 		<>
 			<IconButton
@@ -50,8 +53,8 @@ export const DrawerMenu = memo(() => {
 							</Box>
 							<Divider />
 							<Box p={2} onClick={onClose}>
-								<Link href={"/viewtable"}>
-									<a>一覧テーブル</a>
+								<Link href={"/api/auth/logout"}>
+									<a>ログアウト</a>
 								</Link>
 							</Box>
 							<Divider />

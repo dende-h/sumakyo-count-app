@@ -11,6 +11,7 @@ import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import toast from "react-hot-toast";
 import { shopNameArray } from "../globalState/shopNameArray";
 import { InputItemsCard } from "../components/InputItemsCard";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 export type yearMonth = {
 	id?: number;
@@ -42,23 +43,23 @@ const supabase: SupabaseClient = createClient(
 const Index = ({ year_month, achievements }) => {
 	const [loading, setLoading] = useState(false);
 
-	//実績データの取得とglobalStateへの登録
-	const setAchievements = useSetRecoilState(achievementsArray);
-	useEffect(() => {
-		setAchievements(achievements);
-	}, []);
+	// //実績データの取得とglobalStateへの登録
+	// const setAchievements = useSetRecoilState(achievementsArray);
+	// useEffect(() => {
+	// 	setAchievements(achievements);
+	// }, []);
 
-	//年月とショップ名をDBから取得ものを配列のStateとして保持
-	const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
+	// //年月とショップ名をDBから取得ものを配列のStateとして保持
+	// const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
 
-	//登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
-	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	useEffect(() => {
-		const selectYearMonthList = yearMonthArray.map((item) => {
-			return item.year_month;
-		});
-		setSelectYearMonth(selectYearMonthList);
-	}, [yearMonthArray]); //yearMonthが更新されるたびに更新
+	// //登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
+	// const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
+	// useEffect(() => {
+	// 	const selectYearMonthList = yearMonthArray.map((item) => {
+	// 		return item.year_month;
+	// 	});
+	// 	setSelectYearMonth(selectYearMonthList);
+	// }, [yearMonthArray]); //yearMonthが更新されるたびに更新
 
 	//datepickerで選択した日付（文字列型）
 	const inputDate = useRecoilValue(dateState);
@@ -131,8 +132,7 @@ const Index = ({ year_month, achievements }) => {
 	//月をselect用の配列を用意
 	const monthArray = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 	const initialYearMonthData = {
-		year_month: "",
-		shop_name: "塩山店"
+		year_month: ""
 	};
 
 	const [yearMonth, setYearMonth] = useState<yearMonth>(initialYearMonthData);
@@ -147,11 +147,14 @@ const Index = ({ year_month, achievements }) => {
 	}, [newYearMonth]);
 
 	const onMaking = async () => {
+		setLoading(true);
 		const { error } = await supabase.from("year_month").insert(yearMonth);
-		setYearMonthArray([...yearMonthArray, yearMonth]);
-		toast.success("新しい年月を追加しました");
 		if (error) {
 			toast.error(error.message);
+			setLoading(false);
+		} else {
+			toast.success("登録完了しました");
+			setLoading(false);
 		}
 	};
 
@@ -235,13 +238,5 @@ const Index = ({ year_month, achievements }) => {
 	);
 };
 
-export const getStaticProps = async () => {
-	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
-	if (year_monthError) {
-	}
-	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
-	if (achievementsError) {
-	}
-	return { props: { year_month, achievements }, revalidate: 60 };
-};
+export const getServerSideProps = withPageAuthRequired();
 export default Index;

@@ -4,6 +4,7 @@ import theme from "../theme";
 import { AppProps } from "next/app";
 import HeaderLayout from "../components/templates/HeaderLayout";
 import { Toaster } from "react-hot-toast";
+import { UserProvider } from "@auth0/nextjs-auth0";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 			<RecoilRoot>
 				<HeaderLayout>
 					<Toaster />
-					<Component {...pageProps} />
+					<UserProvider>
+						<Component {...pageProps} />
+					</UserProvider>
 				</HeaderLayout>
 			</RecoilRoot>
 		</ChakraProvider>
