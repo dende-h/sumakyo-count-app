@@ -11,6 +11,7 @@ import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import toast from "react-hot-toast";
 import { shopNameArray } from "../globalState/shopNameArray";
 import { InputItemsCard } from "../components/InputItemsCard";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 export type yearMonth = {
 	id?: number;
@@ -235,13 +236,15 @@ const Index = ({ year_month, achievements }) => {
 	);
 };
 
-export const getStaticProps = async () => {
-	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
-	if (year_monthError) {
+export const getServerSideProps = withPageAuthRequired({
+	async getServerSideProps() {
+		const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
+		if (year_monthError) {
+		}
+		const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
+		if (achievementsError) {
+		}
+		return { props: { year_month, achievements } };
 	}
-	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
-	if (achievementsError) {
-	}
-	return { props: { year_month, achievements }, revalidate: 60 };
-};
+});
 export default Index;

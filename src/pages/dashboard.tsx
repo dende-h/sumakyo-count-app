@@ -1,6 +1,22 @@
-import { Box, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+	Box,
+	Select,
+	Stack,
+	Text,
+	Button,
+	Wrap,
+	WrapItem,
+	Table,
+	Thead,
+	Tbody,
+	Tfoot,
+	Tr,
+	Th,
+	Td,
+	TableCaption
+} from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { yearMonth } from ".";
 import { DashBoardCard } from "../components/DashBoardCard";
@@ -11,6 +27,8 @@ import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
 import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import { achievementTotalArray } from "../globalState/selector/achievementTotalArray";
 import { shopNameArray } from "../globalState/shopNameArray";
+import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
+import { TotalFeeCard } from "../components/TotalFeeCard";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -19,6 +37,9 @@ const supabase: SupabaseClient = createClient(
 );
 
 const DashBoard = ({ achievements, year_month }) => {
+	//テーブルの表示非表示Flag
+	const [isShowTable, setIsShowTable] = useState<boolean>(false);
+
 	//年月とショップ名をDBから取得ものを配列のStateとして保持
 	const yearMonthArray: yearMonth[] = [...year_month];
 
@@ -56,6 +77,9 @@ const DashBoard = ({ achievements, year_month }) => {
 	}, [selectShopName.value]);
 
 	const totalAchievements = useRecoilValue(achievementTotalArray);
+
+	//表示する実績のselector、年月と店舗の選択によってfilterされる
+	const showAchievements = useRecoilValue(showAchievementsTableArray);
 
 	return (
 		<>
@@ -100,13 +124,82 @@ const DashBoard = ({ achievements, year_month }) => {
 				<Wrap p={"4"}>
 					{totalAchievements.map((item) => {
 						return (
-							<WrapItem>
-								<DashBoardCard key={item.label} label={item.label} total={item.total} />
+							<WrapItem key={item.label}>
+								<DashBoardCard label={item.label} total={item.total} />
 							</WrapItem>
 						);
 					})}
 				</Wrap>
 			</Box>
+			<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
+				手数料見込み
+			</Text>
+			<Box>
+				<Wrap p={"4"}>
+					{totalAchievements.map((item) => {
+						return (
+							<WrapItem key={item.label}>
+								<TotalFeeCard label={item.label} total={item.total} />
+							</WrapItem>
+						);
+					})}
+				</Wrap>
+			</Box>
+			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)}>
+				{isShowTable ? "実績テーブルを非表示" : "実績テーブルを表示"}
+			</Button>
+			{isShowTable && (
+				<>
+					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
+						実施日別実績テーブル
+					</Text>
+					<Box overflowX="scroll">
+						<Table variant="simple">
+							<TableCaption>月別実績一覧テーブル</TableCaption>
+							<Thead>
+								<Tr>
+									<Th>実績日</Th>
+									<Th>講座開催数</Th>
+									<Th>ユニークユーザー数</Th>
+									<Th>新規ユーザー数</Th>
+									<Th>MX講座開催数</Th>
+									<Th>MX講座ユーザー数</Th>
+									<Th>店舗</Th>
+									<Th>入力日</Th>
+								</Tr>
+							</Thead>
+							<Tbody>
+								{showAchievements.map((item) => {
+									return (
+										<Tr key={item.id}>
+											<Td>{item.date_of_results}</Td>
+											<Td>{item.seminar_count}</Td>
+											<Td>{item.u_usercount}</Td>
+											<Td>{item.new_usercount}</Td>
+											<Td>{item.mx_seminar_count}</Td>
+											<Td>{item.mx_usercount}</Td>
+											<Td>{item.shop_name}</Td>
+											<Td>{item.created_at}</Td>
+										</Tr>
+									);
+								})}
+							</Tbody>
+							<Tfoot>
+								<Tr>
+									<Th>実績日</Th>
+									<Th>講座開催数</Th>
+									<Th>ユニークユーザー数</Th>
+									<Th>新規ユーザー数</Th>
+									<Th>MX講座開催数</Th>
+									<Th>MX講座ユーザー数</Th>
+									<Th>店舗</Th>
+									<Th>入力日</Th>
+								</Tr>
+							</Tfoot>
+						</Table>
+					</Box>
+				</>
+			)}
 		</>
 	);
 };
