@@ -33,7 +33,7 @@ export const achievementTotalArray = selector({
 		});
 		// 	mx_seminar_countの配列
 		const mxSeminarCountArray: number[] = initialArray.map((item) => {
-			return item.seminar_count;
+			return item.mx_seminar_count;
 		});
 		// 	mx_usercountの配列
 		const mxUserCountArray: number[] = initialArray.map((item) => {

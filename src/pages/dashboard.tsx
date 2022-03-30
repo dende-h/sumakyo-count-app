@@ -29,6 +29,7 @@ import { achievementTotalArray } from "../globalState/selector/achievementTotalA
 import { shopNameArray } from "../globalState/shopNameArray";
 import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
 import { TotalFeeCard } from "../components/TotalFeeCard";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -148,10 +149,11 @@ const DashBoard = ({ achievements, year_month }) => {
 			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)}>
 				{isShowTable ? "実績テーブルを非表示" : "実績テーブルを表示"}
 			</Button>
+
 			{isShowTable && (
-				<>
+				<Box marginTop={5}>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
-						実施日別実績テーブル
+						日別実績
 					</Text>
 					<Box overflowX="scroll">
 						<Table variant="simple">
@@ -198,19 +200,21 @@ const DashBoard = ({ achievements, year_month }) => {
 							</Tfoot>
 						</Table>
 					</Box>
-				</>
+				</Box>
 			)}
 		</>
 	);
 };
-export const getServerSideProps = async () => {
-	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
-	if (year_monthError) {
+export const getServerSideProps = withPageAuthRequired({
+	async getServerSideProps() {
+		const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
+		if (year_monthError) {
+		}
+		const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
+		if (achievementsError) {
+		}
+		return { props: { year_month, achievements } };
 	}
-	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
-	if (achievementsError) {
-	}
-	return { props: { achievements, year_month } };
-};
+});
 
 export default DashBoard;
