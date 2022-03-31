@@ -51,7 +51,7 @@ const DashBoard = ({ achievements, year_month }) => {
 			return item.year_month;
 		});
 		setSelectYearMonth(selectYearMonthList);
-	}, [yearMonthArray]); //yearMonthが更新されるたびに更新
+	}, []); //yearMonthが更新されるたびに更新
 
 	//実績データの取得とglobalStateへの登録
 	const setAchievements = useSetRecoilState(achievementsArray);
@@ -66,7 +66,7 @@ const DashBoard = ({ achievements, year_month }) => {
 	const selectYearMonth = useSelectOnChange();
 	useEffect(() => {
 		setSelectedYearMonth(selectYearMonth.value);
-	}, [selectYearMonth.value]);
+	}, []);
 
 	//店舗selectのopとして利用
 	const selectOptionShopName = useRecoilValue(shopNameArray);
@@ -75,7 +75,7 @@ const DashBoard = ({ achievements, year_month }) => {
 	const selectShopName = useSelectOnChange();
 	useEffect(() => {
 		setOnSelectShopName(selectShopName.value);
-	}, [selectShopName.value]);
+	}, []);
 
 	const totalAchievements = useRecoilValue(achievementTotalArray);
 
@@ -146,7 +146,7 @@ const DashBoard = ({ achievements, year_month }) => {
 					})}
 				</Wrap>
 			</Box>
-			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)}>
+			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)} m={4}>
 				{isShowTable ? "実績テーブルを非表示" : "実績テーブルを表示"}
 			</Button>
 
@@ -155,7 +155,7 @@ const DashBoard = ({ achievements, year_month }) => {
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						日別実績
 					</Text>
-					<Box overflowX="scroll">
+					<Box overflowX="scroll" W={"600px"}>
 						<Table variant="simple">
 							<TableCaption>月別実績一覧テーブル</TableCaption>
 							<Thead>

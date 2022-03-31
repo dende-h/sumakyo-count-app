@@ -40,7 +40,7 @@ const supabase: SupabaseClient = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_KEY
 );
 
-const Index = ({ year_month, achievements }) => {
+const Index = () => {
 	const [loading, setLoading] = useState(false);
 
 	// //実績データの取得とglobalStateへの登録
