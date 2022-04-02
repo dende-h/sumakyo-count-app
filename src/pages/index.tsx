@@ -80,7 +80,7 @@ const Index = () => {
 	const mxUserCount = useCountUpDown();
 	//配列化
 	const inputItemsArray = [seminarCount, uniqueUserCount, newUserCount, mxSeminarCount, mxUserCount];
-	const itemLabel = ["講座開催数", "ユニークユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
+	const itemLabel = ["講座開催数", "リピートユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
 
 	//データを書き込むためのオブジェクト定義
 	const [achievement, setAchievement] = useState<userCount>();

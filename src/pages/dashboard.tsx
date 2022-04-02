@@ -13,7 +13,10 @@ import {
 	Tr,
 	Th,
 	Td,
-	TableCaption
+	TableCaption,
+	Checkbox,
+	IconButton,
+	HStack
 } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
@@ -30,6 +33,9 @@ import { shopNameArray } from "../globalState/shopNameArray";
 import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
 import { TotalFeeCard } from "../components/TotalFeeCard";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { format } from "date-fns";
+import { DeleteRowModal } from "../components/DeleteRowModal";
+import { EditRowModal } from "../components/EditRowModal";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -66,7 +72,7 @@ const DashBoard = ({ achievements, year_month }) => {
 	const selectYearMonth = useSelectOnChange();
 	useEffect(() => {
 		setSelectedYearMonth(selectYearMonth.value);
-	}, []);
+	}, [selectYearMonth.value]);
 
 	//店舗selectのopとして利用
 	const selectOptionShopName = useRecoilValue(shopNameArray);
@@ -75,7 +81,7 @@ const DashBoard = ({ achievements, year_month }) => {
 	const selectShopName = useSelectOnChange();
 	useEffect(() => {
 		setOnSelectShopName(selectShopName.value);
-	}, []);
+	}, [selectShopName.value]);
 
 	const totalAchievements = useRecoilValue(achievementTotalArray);
 
@@ -151,15 +157,16 @@ const DashBoard = ({ achievements, year_month }) => {
 			</Button>
 
 			{isShowTable && (
-				<Box marginTop={5}>
+				<Box m={6} overflowX="scroll">
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						日別実績
 					</Text>
-					<Box overflowX="scroll" W={"600px"}>
-						<Table variant="simple">
+					<Box w={"1200px"}>
+						<Table variant="striped" colorScheme="teal" size={"sm"}>
 							<TableCaption>月別実績一覧テーブル</TableCaption>
 							<Thead>
 								<Tr>
+									<Th></Th>
 									<Th>実績日</Th>
 									<Th>講座開催数</Th>
 									<Th>ユニークユーザー数</Th>
@@ -174,20 +181,27 @@ const DashBoard = ({ achievements, year_month }) => {
 								{showAchievements.map((item) => {
 									return (
 										<Tr key={item.id}>
+											<Td>
+												<HStack>
+													<EditRowModal editItem={item} />
+													<DeleteRowModal id={item.id} />
+												</HStack>
+											</Td>
 											<Td>{item.date_of_results}</Td>
-											<Td>{item.seminar_count}</Td>
-											<Td>{item.u_usercount}</Td>
-											<Td>{item.new_usercount}</Td>
-											<Td>{item.mx_seminar_count}</Td>
-											<Td>{item.mx_usercount}</Td>
+											<Td>{item.seminar_count}開催</Td>
+											<Td>{item.u_usercount}人</Td>
+											<Td>{item.new_usercount}人</Td>
+											<Td>{item.mx_seminar_count}開催</Td>
+											<Td>{item.mx_usercount}人</Td>
 											<Td>{item.shop_name}</Td>
-											<Td>{item.created_at}</Td>
+											<Td>{format(new Date(item.created_at), "yyyy/MM/dd")}</Td>
 										</Tr>
 									);
 								})}
 							</Tbody>
 							<Tfoot>
 								<Tr>
+									<Th></Th>
 									<Th>実績日</Th>
 									<Th>講座開催数</Th>
 									<Th>ユニークユーザー数</Th>
