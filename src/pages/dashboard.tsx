@@ -142,7 +142,7 @@ const DashBoard = ({ achievements, year_month }) => {
 				手数料見込み
 			</Text>
 			<Box>
-				<Wrap p={"4"}>
+				<Wrap p={"4"} marginLeft={-2}>
 					{totalAchievements.map((item) => {
 						return (
 							<WrapItem key={item.label}>

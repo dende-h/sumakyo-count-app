@@ -62,6 +62,8 @@ export const DeleteRowModal: VFC<Props> = memo((props: Props) => {
 				colorScheme={"twitter"}
 				size={"sm"}
 				onClick={onOpen}
+				isDisabled={isLoading}
+				isLoading={isLoading}
 			/>
 
 			<Modal isOpen={isOpen} onClose={onClose}>
