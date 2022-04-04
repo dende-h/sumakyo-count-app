@@ -14,11 +14,15 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { memo } from "react";
-import { useSetRecoilState } from "recoil";
-import { isShowTable } from "../globalState/isShowTable";
 
 export const DrawerMenu = memo(() => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	const onClickClose = () => {
+		setTimeout(() => {
+			onClose();
+		}, 500);
+	};
 
 	return (
 		<>
@@ -40,19 +44,19 @@ export const DrawerMenu = memo(() => {
 					<DrawerBody textAlign={"center"}>
 						<Stack>
 							<Divider />
-							<Box p={2} onClick={onClose}>
+							<Box p={2} onClick={onClickClose}>
 								<Link href={"/"}>
 									<a>実績入力</a>
 								</Link>
 							</Box>
 							<Divider />
-							<Box p={2} onClick={onClose}>
+							<Box p={2} onClick={onClickClose}>
 								<Link href={"/dashboard"}>
 									<a>トータル実績</a>
 								</Link>
 							</Box>
 							<Divider />
-							<Box p={2} onClick={onClose}>
+							<Box p={2}>
 								<Link href={"/api/auth/logout"}>
 									<a>ログアウト</a>
 								</Link>

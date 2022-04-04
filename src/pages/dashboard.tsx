@@ -13,7 +13,8 @@ import {
 	Tr,
 	Th,
 	Td,
-	TableCaption
+	TableCaption,
+	HStack
 } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
@@ -30,6 +31,9 @@ import { shopNameArray } from "../globalState/shopNameArray";
 import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
 import { TotalFeeCard } from "../components/TotalFeeCard";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { format } from "date-fns";
+import { DeleteRowModal } from "../components/DeleteRowModal";
+import { EditRowModal } from "../components/EditRowModal";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -51,7 +55,7 @@ const DashBoard = ({ achievements, year_month }) => {
 			return item.year_month;
 		});
 		setSelectYearMonth(selectYearMonthList);
-	}, [yearMonthArray]); //yearMonthが更新されるたびに更新
+	}, []); //yearMonthが更新されるたびに更新
 
 	//実績データの取得とglobalStateへの登録
 	const setAchievements = useSetRecoilState(achievementsArray);
@@ -136,7 +140,7 @@ const DashBoard = ({ achievements, year_month }) => {
 				手数料見込み
 			</Text>
 			<Box>
-				<Wrap p={"4"}>
+				<Wrap p={"4"} marginLeft={-2}>
 					{totalAchievements.map((item) => {
 						return (
 							<WrapItem key={item.label}>
@@ -146,20 +150,21 @@ const DashBoard = ({ achievements, year_month }) => {
 					})}
 				</Wrap>
 			</Box>
-			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)}>
+			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)} m={4}>
 				{isShowTable ? "実績テーブルを非表示" : "実績テーブルを表示"}
 			</Button>
 
 			{isShowTable && (
-				<Box marginTop={5}>
+				<Box m={6} overflowX="scroll">
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						日別実績
 					</Text>
-					<Box overflowX="scroll">
-						<Table variant="simple">
+					<Box w={"1200px"}>
+						<Table variant="striped" colorScheme="teal" size={"sm"}>
 							<TableCaption>月別実績一覧テーブル</TableCaption>
 							<Thead>
 								<Tr>
+									<Th></Th>
 									<Th>実績日</Th>
 									<Th>講座開催数</Th>
 									<Th>ユニークユーザー数</Th>
@@ -174,20 +179,27 @@ const DashBoard = ({ achievements, year_month }) => {
 								{showAchievements.map((item) => {
 									return (
 										<Tr key={item.id}>
+											<Td>
+												<HStack>
+													<EditRowModal editItem={item} />
+													<DeleteRowModal id={item.id} />
+												</HStack>
+											</Td>
 											<Td>{item.date_of_results}</Td>
-											<Td>{item.seminar_count}</Td>
-											<Td>{item.u_usercount}</Td>
-											<Td>{item.new_usercount}</Td>
-											<Td>{item.mx_seminar_count}</Td>
-											<Td>{item.mx_usercount}</Td>
+											<Td>{item.seminar_count}開催</Td>
+											<Td>{item.u_usercount}人</Td>
+											<Td>{item.new_usercount}人</Td>
+											<Td>{item.mx_seminar_count}開催</Td>
+											<Td>{item.mx_usercount}人</Td>
 											<Td>{item.shop_name}</Td>
-											<Td>{item.created_at}</Td>
+											<Td>{format(new Date(item.created_at), "yyyy/MM/dd")}</Td>
 										</Tr>
 									);
 								})}
 							</Tbody>
 							<Tfoot>
 								<Tr>
+									<Th></Th>
 									<Th>実績日</Th>
 									<Th>講座開催数</Th>
 									<Th>ユニークユーザー数</Th>

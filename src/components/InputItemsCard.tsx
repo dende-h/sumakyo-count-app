@@ -1,4 +1,4 @@
-import { Button, Center, Divider, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, Center, HStack, Stack, Text } from "@chakra-ui/react";
 import { Dispatch, memo, SetStateAction } from "react";
 
 type Props = {

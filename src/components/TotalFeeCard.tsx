@@ -10,13 +10,13 @@ export const TotalFeeCard = memo((props: Props) => {
 	const { label, total } = props;
 	//ユニークユーザーと新規ユーザーの手数料の金額定義
 	const uniqueUserFee = 1000;
-	const newUserFee = 2000;
+	const newUserFee = 2100;
 
 	const totalFeeCalc = () => {
 		switch (label) {
-			case "ユニークユーザー数":
+			case "リピートユーザー数":
 				const totalUniqueUserFee = total * uniqueUserFee;
-				const uuFeeLabel = "ユニークユーザー手数料";
+				const uuFeeLabel = "リピートユーザー手数料";
 				return { totalUniqueUserFee, uuFeeLabel };
 			case "新規ユーザー数":
 				const totalNewUserFee = total * newUserFee;

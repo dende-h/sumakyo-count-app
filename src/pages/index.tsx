@@ -3,15 +3,14 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useCountUpDown } from "../hooks/useCountUpDown";
 import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { dateState } from "../globalState/dateState";
 import { useSelectOnChange } from "../hooks/useSelectOnChange";
-import { achievementsArray } from "../globalState/achievementsArray";
-import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import toast from "react-hot-toast";
 import { shopNameArray } from "../globalState/shopNameArray";
 import { InputItemsCard } from "../components/InputItemsCard";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { isLoadingState } from "../globalState/isLoadingState";
 
 export type yearMonth = {
 	id?: number;
@@ -40,26 +39,8 @@ const supabase: SupabaseClient = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_KEY
 );
 
-const Index = ({ year_month, achievements }) => {
-	const [loading, setLoading] = useState(false);
-
-	// //実績データの取得とglobalStateへの登録
-	// const setAchievements = useSetRecoilState(achievementsArray);
-	// useEffect(() => {
-	// 	setAchievements(achievements);
-	// }, []);
-
-	// //年月とショップ名をDBから取得ものを配列のStateとして保持
-	// const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
-
-	// //登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
-	// const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	// useEffect(() => {
-	// 	const selectYearMonthList = yearMonthArray.map((item) => {
-	// 		return item.year_month;
-	// 	});
-	// 	setSelectYearMonth(selectYearMonthList);
-	// }, [yearMonthArray]); //yearMonthが更新されるたびに更新
+const Index = () => {
+	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 
 	//datepickerで選択した日付（文字列型）
 	const inputDate = useRecoilValue(dateState);
@@ -80,7 +61,7 @@ const Index = ({ year_month, achievements }) => {
 	const mxUserCount = useCountUpDown();
 	//配列化
 	const inputItemsArray = [seminarCount, uniqueUserCount, newUserCount, mxSeminarCount, mxUserCount];
-	const itemLabel = ["講座開催数", "ユニークユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
+	const itemLabel = ["講座開催数", "リピートユーザー数", "新規ユーザー数", "MX講座開催数", "MX講座ユーザー数"];
 
 	//データを書き込むためのオブジェクト定義
 	const [achievement, setAchievement] = useState<userCount>();
@@ -108,7 +89,7 @@ const Index = ({ year_month, achievements }) => {
 
 	//送信ボタンを押したときのinsartAPI
 	const onSubmit = async () => {
-		setLoading(true);
+		setIsLoading(true);
 
 		const { error } = await supabase.from("achievements").insert(achievement);
 
@@ -121,10 +102,10 @@ const Index = ({ year_month, achievements }) => {
 		if (error) {
 			//エラー時のコンソール表示
 			toast.error(error.message);
-			setLoading(false);
+			setIsLoading(false);
 		} else {
 			toast.success("登録完了しました");
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -147,14 +128,14 @@ const Index = ({ year_month, achievements }) => {
 	}, [newYearMonth]);
 
 	const onMaking = async () => {
-		setLoading(true);
+		setIsLoading(true);
 		const { error } = await supabase.from("year_month").insert(yearMonth);
 		if (error) {
 			toast.error(error.message);
-			setLoading(false);
+			setIsLoading(false);
 		} else {
 			toast.success("登録完了しました");
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -191,7 +172,7 @@ const Index = ({ year_month, achievements }) => {
 							const label = itemLabel[Index];
 							return (
 								<WrapItem key={Index}>
-									<InputItemsCard itemLabel={label} inputItem={item} loading={loading} />
+									<InputItemsCard itemLabel={label} inputItem={item} loading={isLoading} />
 								</WrapItem>
 							);
 						})}
@@ -201,8 +182,8 @@ const Index = ({ year_month, achievements }) => {
 						<Button
 							onClick={onSubmit}
 							colorScheme="teal"
-							isDisabled={loading || selectShopName.value === ""}
-							isLoading={loading}
+							isDisabled={isLoading || selectShopName.value === ""}
+							isLoading={isLoading}
 						>
 							送信
 						</Button>
@@ -227,7 +208,12 @@ const Index = ({ year_month, achievements }) => {
 							})}
 						</Select>
 						<Box>
-							<Button onClick={onMaking} colorScheme="teal" isDisabled={newYear.value === "" || newMonth.value === ""}>
+							<Button
+								onClick={onMaking}
+								colorScheme="teal"
+								isDisabled={isLoading || newYear.value === "" || newMonth.value === ""}
+								isLoading={isLoading}
+							>
 								作成
 							</Button>
 						</Box>
