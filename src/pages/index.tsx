@@ -6,8 +6,6 @@ import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { dateState } from "../globalState/dateState";
 import { useSelectOnChange } from "../hooks/useSelectOnChange";
-import { achievementsArray } from "../globalState/achievementsArray";
-import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
 import toast from "react-hot-toast";
 import { shopNameArray } from "../globalState/shopNameArray";
 import { InputItemsCard } from "../components/InputItemsCard";
@@ -43,24 +41,6 @@ const supabase: SupabaseClient = createClient(
 
 const Index = () => {
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
-
-	// //実績データの取得とglobalStateへの登録
-	// const setAchievements = useSetRecoilState(achievementsArray);
-	// useEffect(() => {
-	// 	setAchievements(achievements);
-	// }, []);
-
-	// //年月とショップ名をDBから取得ものを配列のStateとして保持
-	// const [yearMonthArray, setYearMonthArray] = useState<yearMonth[]>([...year_month]);
-
-	// //登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
-	// const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	// useEffect(() => {
-	// 	const selectYearMonthList = yearMonthArray.map((item) => {
-	// 		return item.year_month;
-	// 	});
-	// 	setSelectYearMonth(selectYearMonthList);
-	// }, [yearMonthArray]); //yearMonthが更新されるたびに更新
 
 	//datepickerで選択した日付（文字列型）
 	const inputDate = useRecoilValue(dateState);

@@ -14,8 +14,6 @@ import {
 	Th,
 	Td,
 	TableCaption,
-	Checkbox,
-	IconButton,
 	HStack
 } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";

@@ -1,16 +1,4 @@
-import {
-	Button,
-	Center,
-	HStack,
-	Stack,
-	Text,
-	WrapItem,
-	Wrap,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-	useDisclosure
-} from "@chakra-ui/react";
+import { Button, Center, HStack, Stack, Text, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { memo, useEffect, useState } from "react";
 import toast from "react-hot-toast";
