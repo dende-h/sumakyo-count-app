@@ -9,8 +9,8 @@ type Props = {
 export const TotalFeeCard = memo((props: Props) => {
 	const { label, total } = props;
 	//ユニークユーザーと新規ユーザーの手数料の金額定義
-	const uniqueUserFee = 1000;
-	const newUserFee = 2100;
+	const uniqueUserFee = 1100;
+	const newUserFee = 2200;
 
 	const totalFeeCalc = () => {
 		switch (label) {
@@ -36,7 +36,7 @@ export const TotalFeeCard = memo((props: Props) => {
 					<Text fontSize={"lg"} fontWeight="bold">
 						{totalFee.uuFeeLabel || totalFee.nuFeeLabel}
 					</Text>
-					<Divider />
+					<Divider borderColor={"blue.500"} />
 					<Text fontSize={"x-large"} fontWeight={"bold"}>
 						{totalFee.uuFeeLabel && `現在${totalFee.totalUniqueUserFee}円`}
 						{totalFee.nuFeeLabel && `現在${totalFee.totalNewUserFee}円`}

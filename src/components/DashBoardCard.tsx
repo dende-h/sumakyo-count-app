@@ -15,7 +15,7 @@ export const DashBoardCard = memo((props: Props) => {
 				<Text fontSize={"lg"} fontWeight="bold">
 					{label}
 				</Text>
-				<Divider />
+				<Divider borderColor={"blue.500"} />
 				<Text fontSize={"x-large"} fontWeight={"bold"}>
 					{total}
 					{label === "講座開催数" || label === "MX講座開催数" ? "回" : "人"}

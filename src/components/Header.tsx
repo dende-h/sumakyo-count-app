@@ -9,6 +9,9 @@ export const Header = memo(() => {
 				<Text fontSize={["md", "lg", "x-large"]} fontWeight="bold" lineHeight={["50px", "60px", "70px"]} marginLeft={4}>
 					スマ教実績管理アプリ
 				</Text>
+				<Box lineHeight={["50px", "60px", "70px"]} marginLeft={4}>
+					<Text>ver. 1.1.1</Text>
+				</Box>
 
 				<Spacer />
 				<Box marginRight={4} lineHeight={["50px", "60px", "70px"]}>
