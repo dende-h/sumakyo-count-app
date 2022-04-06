@@ -34,6 +34,7 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { format } from "date-fns";
 import { DeleteRowModal } from "../components/DeleteRowModal";
 import { EditRowModal } from "../components/EditRowModal";
+import { TotalIncomeCard } from "../components/TotalIncomeCard";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -148,6 +149,9 @@ const DashBoard = ({ achievements, year_month }) => {
 							</WrapItem>
 						);
 					})}
+					<WrapItem>
+						<TotalIncomeCard />
+					</WrapItem>
 				</Wrap>
 			</Box>
 			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)} m={4}>
@@ -155,11 +159,11 @@ const DashBoard = ({ achievements, year_month }) => {
 			</Button>
 
 			{isShowTable && (
-				<Box m={6} overflowX="scroll">
+				<Box marginLeft={6} overflowX="scroll">
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						日別実績
 					</Text>
-					<Box w={"1200px"}>
+					<Box w={"1200px"} h={"400px"}>
 						<Table variant="striped" colorScheme="teal" size={"sm"}>
 							<TableCaption>月別実績一覧テーブル</TableCaption>
 							<Thead>
@@ -202,7 +206,7 @@ const DashBoard = ({ achievements, year_month }) => {
 									<Th></Th>
 									<Th>実績日</Th>
 									<Th>講座開催数</Th>
-									<Th>ユニークユーザー数</Th>
+									<Th>リピートユーザー数</Th>
 									<Th>新規ユーザー数</Th>
 									<Th>MX講座開催数</Th>
 									<Th>MX講座ユーザー数</Th>
@@ -222,7 +226,10 @@ export const getServerSideProps = withPageAuthRequired({
 		const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 		if (year_monthError) {
 		}
-		const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
+		const { data: achievements, error: achievementsError } = await supabase
+			.from("achievements")
+			.select("*")
+			.order("date_of_results", { ascending: true });
 		if (achievementsError) {
 		}
 		return { props: { year_month, achievements } };

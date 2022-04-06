@@ -33,7 +33,7 @@ export const EditRowModal: VFC<Props> = memo((props: Props) => {
 				isLoading={isLoading}
 			/>
 
-			<Modal isOpen={isOpen} onClose={onClose}>
+			<Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
 				<ModalOverlay />
 				<ModalContent textAlign={"center"}>
 					<EditItemsCard editItem={editItem} clickCancel={cancel} />

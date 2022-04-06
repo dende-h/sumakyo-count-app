@@ -71,7 +71,10 @@ export const EditItemsCard = memo((props: Props) => {
 			toast.error(error.message);
 			setIsLoading(false);
 		} else {
-			const { data, error } = await supabase.from("achievements").select("*");
+			const { data, error } = await supabase
+				.from("achievements")
+				.select("*")
+				.order("date_of_results", { ascending: true });
 			if (error) {
 			} else {
 				const newAchievements = data;
@@ -87,12 +90,12 @@ export const EditItemsCard = memo((props: Props) => {
 		<>
 			<ModalHeader>実績内容を更新</ModalHeader>
 			<ModalBody pb={6}>
-				<Stack paddingLeft={20} paddingRight={20}>
+				<Stack marginLeft={["15px", "50px"]}>
 					{editItemsArray.map((item, index) => {
 						const label = itemLabel[index];
 
 						return (
-							<Stack p={2} w={"240px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+							<Stack p={2} maxW={"240px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
 								<Text fontSize={"lg"} fontWeight="bold">
 									{label}
 								</Text>
