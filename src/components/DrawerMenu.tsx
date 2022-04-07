@@ -56,6 +56,12 @@ export const DrawerMenu = memo(() => {
 								</Link>
 							</Box>
 							<Divider />
+							<Box p={2} onClick={onClickClose}>
+								<Link href={"/progress"}>
+									<a>進捗</a>
+								</Link>
+							</Box>
+							<Divider />
 							<Box p={2}>
 								<Link href={"/api/auth/logout"}>
 									<a>ログアウト</a>
