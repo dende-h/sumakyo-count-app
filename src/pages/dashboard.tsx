@@ -17,18 +17,8 @@ import {
 	HStack
 } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { yearMonth } from ".";
+import { useState } from "react";
 import { DashBoardCard } from "../components/DashBoardCard";
-import { useSelectOnChange } from "../hooks/useSelectOnChange";
-import { achievementsArray } from "../globalState/achievementsArray";
-import { onSelectedShopName } from "../globalState/onSelectedShopName";
-import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
-import { achievementTotalArray } from "../globalState/selector/achievementTotalArray";
-import { shopNameArray } from "../globalState/shopNameArray";
-import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
 import { TotalFeeCard } from "../components/TotalFeeCard";
 import { useUser } from "@auth0/nextjs-auth0";
 import { format } from "date-fns";
@@ -36,6 +26,8 @@ import { DeleteRowModal } from "../components/DeleteRowModal";
 import { EditRowModal } from "../components/EditRowModal";
 import { TotalIncomeCard } from "../components/TotalIncomeCard";
 import { useRouter } from "next/router";
+import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
+import { useAchievementDataSet } from "../hooks/useAchievementDataSet";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -53,46 +45,9 @@ const DashBoard = ({ achievements, year_month }) => {
 	//テーブルの表示非表示Flag
 	const [isShowTable, setIsShowTable] = useState<boolean>(false);
 
-	//年月をDBから取得ものを配列のStateとして保持
-	const yearMonthArray: yearMonth[] = [...year_month];
+	const { selectOption, selectShopName, selectYearMonth, shopNameList } = useYearMonthDataSet({ year_month });
 
-	//登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
-	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	useEffect(() => {
-		const selectYearMonthList = yearMonthArray.map((item) => {
-			return item.year_month;
-		});
-		setSelectYearMonth(selectYearMonthList);
-	}, []); //yearMonthが更新されるたびに更新
-
-	//実績データの取得とglobalStateへの登録
-	const setAchievements = useSetRecoilState(achievementsArray);
-	useEffect(() => {
-		setAchievements(achievements);
-	}, []);
-	//作成された年月をselectのopとして利用
-	const selectOption = useRecoilValue(selectOptionYearMonth);
-	//選択されている年月用のstateSet
-	const setSelectedYearMonth = useSetRecoilState(onSelectYearMonthState);
-
-	const selectYearMonth = useSelectOnChange();
-	useEffect(() => {
-		setSelectedYearMonth(selectYearMonth.value);
-	}, [selectYearMonth.value]);
-
-	//店舗selectのopとして利用
-	const selectOptionShopName = useRecoilValue(shopNameArray);
-	//選択されている店舗用stateSet
-	const setOnSelectShopName = useSetRecoilState(onSelectedShopName);
-	const selectShopName = useSelectOnChange();
-	useEffect(() => {
-		setOnSelectShopName(selectShopName.value);
-	}, [selectShopName.value]);
-
-	const totalAchievements = useRecoilValue(achievementTotalArray);
-
-	//表示する実績のselector、年月と店舗の選択によってfilterされる
-	const showAchievements = useRecoilValue(showAchievementsTableArray);
+	const { totalAchievements, showAchievements } = useAchievementDataSet({ achievements });
 
 	return (
 		<>
@@ -122,7 +77,7 @@ const DashBoard = ({ achievements, year_month }) => {
 							defaultValue={""}
 							backgroundColor={"white"}
 						>
-							{selectOptionShopName.map((item) => {
+							{shopNameList.map((item) => {
 								return (
 									<option key={item} value={`${item}`}>
 										{item}

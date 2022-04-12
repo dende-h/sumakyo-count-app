@@ -12,6 +12,7 @@ import { shopNameArray } from "../globalState/shopNameArray";
 
 import { useInputValue } from "../hooks/userInputValue";
 import { useSelectOnChange } from "../hooks/useSelectOnChange";
+import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -38,35 +39,7 @@ const GoalSetting = ({ year_month }) => {
 	//目標登録成功フラグ
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	//年月をDBから取得ものを配列のStateとして保持
-	const yearMonthArray: yearMonth[] = [...year_month];
-
-	//登録済みの年月のみの配列を生成。後ほどincludeとしてfilterで使用
-	const setSelectYearMonth = useSetRecoilState(selectOptionYearMonth);
-	useEffect(() => {
-		const selectYearMonthList = yearMonthArray.map((item) => {
-			return item.year_month;
-		});
-		setSelectYearMonth(selectYearMonthList);
-	}, []); //yearMonthが更新されるたびに更新
-
-	//作成された年月をselectのopとして利用
-	const selectOption = useRecoilValue(selectOptionYearMonth);
-	//選択されている年月用のstateSet
-	const setSelectedYearMonth = useSetRecoilState(onSelectYearMonthState);
-
-	const selectYearMonth = useSelectOnChange();
-	useEffect(() => {
-		setSelectedYearMonth(selectYearMonth.value);
-	}, [selectYearMonth.value]);
-
-	//入力対象の店舗名配列
-	const shopNameList = useRecoilValue(shopNameArray);
-	//全店舗は入力対象から除外
-	const inputShopName = shopNameList.filter((item) => {
-		return item !== "全店舗";
-	});
-	const selectShopName = useSelectOnChange();
+	const { inputShopName, selectOption, selectShopName, selectYearMonth } = useYearMonthDataSet({ year_month });
 
 	//目標を設定するインプットフォームを定義
 	const uniqueUserGoalInput = useInputValue();
@@ -229,13 +202,8 @@ export const getStaticProps = async () => {
 	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 	if (year_monthError) {
 	}
-	const { data: achievements, error: achievementsError } = await supabase
-		.from("achievements")
-		.select("*")
-		.order("date_of_results", { ascending: true });
-	if (achievementsError) {
-	}
-	return { props: { year_month, achievements }, revalidate: 10 };
+
+	return { props: { year_month }, revalidate: 10 };
 };
 
 export default GoalSetting;
