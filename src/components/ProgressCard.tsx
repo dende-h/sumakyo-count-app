@@ -1,6 +1,8 @@
 import { Divider, Stack, Text } from "@chakra-ui/react";
 import { memo } from "react";
 import { goal } from "../pages/goal_setting";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 type Props = {
 	label: string;
@@ -27,14 +29,14 @@ export const ProgressCard = memo((props: Props) => {
 				//進捗率
 				const rateOfProgressUniqueUser = total / goal.u_user_goal;
 
-				return { goal: goal.seminar_goal, remaining: remainingUniqueUser, rateOfProgress: rateOfProgressUniqueUser };
+				return { goal: goal.u_user_goal, remaining: remainingUniqueUser, rateOfProgress: rateOfProgressUniqueUser };
 			case "新規ユーザー数":
 				//残り件数
 				const remainingNewUser = goal.new_user_goal - total;
 				//進捗率
 				const rateOfProgressNewUser = total / goal.new_user_goal;
 
-				return { goal: goal.seminar_goal, remaining: remainingNewUser, rateOfProgress: rateOfProgressNewUser };
+				return { goal: goal.new_user_goal, remaining: remainingNewUser, rateOfProgress: rateOfProgressNewUser };
 			default:
 				return null;
 		}
@@ -52,11 +54,22 @@ export const ProgressCard = memo((props: Props) => {
 					</Text>
 					<Divider borderColor={"blue.500"} />
 					<Text fontSize={"x-large"} fontWeight={"bold"}>
-						現在の実績{total}/ 目標値{progressCardContent.goal}/ 残り{progressCardContent.remaining} 件/
-						{new Intl.NumberFormat("ja", { style: "percent", maximumSignificantDigits: 3 }).format(
-							progressCardContent.rateOfProgress
-						)}
+						目標値{progressCardContent.goal}
 					</Text>
+					<Text fontSize={"x-large"} fontWeight={"bold"}>
+						現在の実績{total}
+					</Text>
+					<Text fontSize={"x-large"} fontWeight={"bold"}>
+						残り{progressCardContent.remaining} 件
+					</Text>
+					<CircularProgressbar
+						value={progressCardContent.rateOfProgress}
+						maxValue={1}
+						text={`${new Intl.NumberFormat("ja", { style: "percent", maximumSignificantDigits: 3 }).format(
+							progressCardContent.rateOfProgress
+						)}`}
+					/>
+					;
 				</Stack>
 			) : undefined}
 		</>
