@@ -25,7 +25,6 @@ import { useEffect } from "react";
 import { ProgressCard } from "../components/ProgressCard";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { isNotEmptyObject } from "@chakra-ui/utils";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
