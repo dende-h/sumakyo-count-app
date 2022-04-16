@@ -12,6 +12,7 @@
     "@chakra-ui/theme-tools": "1.1.2",
     "@emotion/react": "11.1.5",
     "@emotion/styled": "11.1.5",
+    "@popperjs/core": "^2.11.5",
     "@supabase/supabase-js": "^1.31.2",
     "@swc/core-win32-x64-msvc": "^1.2.166",
     "date-fns": "^2.28.0",
