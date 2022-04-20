@@ -1,24 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
 import { useAchievementDataSet } from "../hooks/useAchievementDataSet";
-import {
-	Box,
-	Select,
-	Stack,
-	Text,
-	Button,
-	Wrap,
-	WrapItem,
-	Table,
-	Thead,
-	Tbody,
-	Tfoot,
-	Tr,
-	Th,
-	Td,
-	TableCaption,
-	HStack
-} from "@chakra-ui/react";
+import { Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { goalValueState } from "../globalState/goalValueState";
 import { dateState } from "../globalState/dateState";
@@ -26,7 +9,6 @@ import { useEffect } from "react";
 import { ProgressCard } from "../components/ProgressCard";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
 import { dateOfAchievement } from "../globalState/selector/dateOfAchievement";
 import { DailyCard } from "../components/DailyCard";
 
@@ -37,11 +19,11 @@ const supabase: SupabaseClient = createClient(
 );
 
 const Progress = ({ year_month, achievements, goalValue }) => {
-	const { inputShopName, selectOption, selectShopName, selectYearMonth, shopNameList } = useYearMonthDataSet({
+	const { inputShopName, selectOption, selectShopName, selectYearMonth } = useYearMonthDataSet({
 		year_month
 	});
 
-	const { totalAchievements, showAchievements } = useAchievementDataSet({ achievements });
+	const { totalAchievements } = useAchievementDataSet({ achievements });
 
 	//取得目標値の配列をセット
 	const [goal, setGoal] = useRecoilState(goalValueState);
@@ -53,7 +35,6 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	//選択した日付をRecoilから取得
 	const selectedDate = useRecoilValue(dateState);
 	const achievementArray = useRecoilValue(dateOfAchievement);
-	console.log(achievementArray);
 
 	const onSelectShopName = useRecoilValue(onSelectedShopName);
 	const onSelectYearMonth = useRecoilValue(onSelectYearMonthState);
@@ -66,7 +47,6 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	//オブジェクトに変換
 	const selectedGoalValueObjectArray = { ...selectedGoalValueArray };
 	const selectedGoalValueObject = selectedGoalValueObjectArray[0];
-	console.log(selectedGoalValueObject);
 
 	//現在の進捗率
 

@@ -43,7 +43,6 @@ export const ProgressCard = memo((props: Props) => {
 	};
 
 	const progressCardContent = progressCalc();
-	console.log(progressCardContent);
 
 	return (
 		<>
