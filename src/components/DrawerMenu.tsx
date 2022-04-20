@@ -21,7 +21,7 @@ export const DrawerMenu = memo(() => {
 	const onClickClose = () => {
 		setTimeout(() => {
 			onClose();
-		}, 1800);
+		}, 500);
 	};
 
 	return (
@@ -58,7 +58,7 @@ export const DrawerMenu = memo(() => {
 							<Divider />
 							<Box p={2} onClick={onClickClose}>
 								<Link href={"/progress"}>
-									<a>進捗管理</a>
+									<a>日報</a>
 								</Link>
 							</Box>
 							<Divider />

@@ -21,10 +21,14 @@ import {
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { goalValueState } from "../globalState/goalValueState";
+import { dateState } from "../globalState/dateState";
 import { useEffect } from "react";
 import { ProgressCard } from "../components/ProgressCard";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
+import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
+import { dateOfAchievement } from "../globalState/selector/dateOfAchievement";
+import { DailyCard } from "../components/DailyCard";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -39,13 +43,17 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 
 	const { totalAchievements, showAchievements } = useAchievementDataSet({ achievements });
 
+	//取得目標値の配列をセット
 	const [goal, setGoal] = useRecoilState(goalValueState);
 
 	useEffect(() => {
 		setGoal(goalValue);
 	}, []);
 
-	console.log(goal);
+	//選択した日付をRecoilから取得
+	const selectedDate = useRecoilValue(dateState);
+	const achievementArray = useRecoilValue(dateOfAchievement);
+	console.log(achievementArray);
 
 	const onSelectShopName = useRecoilValue(onSelectedShopName);
 	const onSelectYearMonth = useRecoilValue(onSelectYearMonthState);
@@ -88,7 +96,7 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 					defaultValue={""}
 					backgroundColor={"white"}
 				>
-					{shopNameList.map((item) => {
+					{inputShopName.map((item) => {
 						return (
 							<option key={item} value={`${item}`}>
 								{item}
@@ -97,7 +105,18 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 					})}
 				</Select>
 			</Stack>
-			<Wrap>
+			<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
+				{selectedDate}の日報
+			</Text>
+			<Wrap p={"4"}>
+				{achievementArray.map((item) => {
+					return <DailyCard key={item.id} achievement={item} />;
+				})}
+			</Wrap>
+			<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
+				進捗率と目標までの残数
+			</Text>
+			<Wrap p={"4"}>
 				{totalAchievements.map((item) => {
 					return (
 						<WrapItem key={item.label}>

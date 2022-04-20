@@ -1,4 +1,4 @@
-import { Divider, Stack, Text } from "@chakra-ui/react";
+import { Divider, Stack, Text, Box, Flex } from "@chakra-ui/react";
 import { memo } from "react";
 import { goal } from "../pages/goal_setting";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -48,29 +48,29 @@ export const ProgressCard = memo((props: Props) => {
 	return (
 		<>
 			{progressCardContent ? (
-				<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
-					<Text fontSize={"lg"} fontWeight="bold">
-						目標{label}
-					</Text>
-					<Divider borderColor={"blue.500"} />
-					<Text fontSize={"x-large"} fontWeight={"bold"}>
-						目標値{progressCardContent.goal}
-					</Text>
-					<Text fontSize={"x-large"} fontWeight={"bold"}>
-						現在の実績{total}
-					</Text>
-					<Text fontSize={"x-large"} fontWeight={"bold"}>
-						残り{progressCardContent.remaining} 件
-					</Text>
-					<CircularProgressbar
-						value={progressCardContent.rateOfProgress}
-						maxValue={1}
-						text={`${new Intl.NumberFormat("ja", { style: "percent", maximumSignificantDigits: 3 }).format(
-							progressCardContent.rateOfProgress
-						)}`}
-					/>
-					;
-				</Stack>
+				<Flex backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
+					<Stack p={4} w={["180px", "220px", "260px"]}>
+						<Text fontSize={["md", "lg", "lg"]} fontWeight="bold">
+							目標{label}
+						</Text>
+						<Divider borderColor={"blue.500"} />
+						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
+							現在の実績{total}
+						</Text>
+						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
+							残り{progressCardContent.remaining} 件
+						</Text>
+					</Stack>
+					<Box paddingX={2} paddingY={4} w={["110px", "130px", "150px"]}>
+						<CircularProgressbar
+							value={progressCardContent.rateOfProgress}
+							maxValue={1}
+							text={`${new Intl.NumberFormat("ja", { style: "percent", maximumSignificantDigits: 3 }).format(
+								progressCardContent.rateOfProgress
+							)}`}
+						/>
+					</Box>
+				</Flex>
 			) : undefined}
 		</>
 	);
