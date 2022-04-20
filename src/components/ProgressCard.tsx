@@ -56,9 +56,11 @@ export const ProgressCard = memo((props: Props) => {
 						<Divider borderColor={"blue.500"} />
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
 							現在の実績{total}
+							{label === "講座開催数" ? "回" : "人"}
 						</Text>
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
-							残り{progressCardContent.remaining} 件
+							残り{progressCardContent.remaining}
+							{label === "講座開催数" ? "回" : "人"}
 						</Text>
 					</Stack>
 					<Box paddingX={2} paddingY={4} w={["110px", "130px", "150px"]}>
