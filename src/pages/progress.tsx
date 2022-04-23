@@ -1,16 +1,35 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
 import { useAchievementDataSet } from "../hooks/useAchievementDataSet";
-import { Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	HStack,
+	Select,
+	Stack,
+	Table,
+	TableCaption,
+	Tbody,
+	Td,
+	Text,
+	Tfoot,
+	Th,
+	Thead,
+	Tr,
+	Wrap,
+	WrapItem
+} from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { goalValueState } from "../globalState/goalValueState";
 import { dateState } from "../globalState/dateState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ProgressCard } from "../components/ProgressCard";
 import { onSelectedShopName } from "../globalState/onSelectedShopName";
 import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
 import { dateOfAchievement } from "../globalState/selector/dateOfAchievement";
 import { DailyCard } from "../components/DailyCard";
+import { DeleteRowModal } from "../components/DeleteRowModal";
+import { EditRowModal } from "../components/EditRowModal";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -48,7 +67,8 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	const selectedGoalValueObjectArray = { ...selectedGoalValueArray };
 	const selectedGoalValueObject = selectedGoalValueObjectArray[0];
 
-	//現在の進捗率
+	//テーブルの表示非表示Flag
+	const [isShowTable, setIsShowTable] = useState<boolean>(false);
 
 	return (
 		<>
@@ -105,25 +125,80 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 					);
 				})}
 			</Wrap>
+			<Button colorScheme={"facebook"} onClick={() => setIsShowTable(!isShowTable)} m={4}>
+				{isShowTable ? "目標値テーブルを非表示" : "目標値テーブルを表示"}
+			</Button>
+
+			{isShowTable && (
+				<Box marginLeft={6} overflowX="scroll">
+					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
+						月別目標値
+					</Text>
+					<Box w={"1200px"} h={"400px"}>
+						<Table variant="striped" colorScheme="teal" size={"sm"}>
+							<TableCaption>月別目標値テーブル</TableCaption>
+							<Thead>
+								<Tr>
+									<Th></Th>
+									<Th>講座開催数</Th>
+									<Th>リピートユーザー数</Th>
+									<Th>新規ユーザー数</Th>
+									<Th>MX講座開催数</Th>
+									<Th>MX講座ユーザー数</Th>
+									<Th>店舗/年月</Th>
+								</Tr>
+							</Thead>
+							<Tbody>
+								{goal.map((item) => {
+									return (
+										<Tr key={item.id}>
+											<Td>
+												<HStack>
+													<EditRowModal editItem={item} />
+													<DeleteRowModal id={item.id} />
+												</HStack>
+											</Td>
+											<Td>{item.seminar_goal}開催</Td>
+											<Td>{item.u_user_goal}人</Td>
+											<Td>{item.new_user_goal}人</Td>
+											<Td>{item.mx_seminar_goal}開催</Td>
+											<Td>{item.mx_seminar_goal}人</Td>
+											<Td>{item.shop_name_month}</Td>
+										</Tr>
+									);
+								})}
+							</Tbody>
+							<Tfoot>
+								<Tr>
+									<Th></Th>
+									<Th>講座開催数</Th>
+									<Th>リピートユーザー数</Th>
+									<Th>新規ユーザー数</Th>
+									<Th>MX講座開催数</Th>
+									<Th>MX講座ユーザー数</Th>
+									<Th>店舗/年月</Th>
+								</Tr>
+							</Tfoot>
+						</Table>
+					</Box>
+				</Box>
+			)}
 		</>
 	);
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
 	const { data: year_month, error: year_monthError } = await supabase.from("year_month").select("*");
 	if (year_monthError) {
 	}
-	const { data: achievements, error: achievementsError } = await supabase
-		.from("achievements")
-		.select("*")
-		.order("date_of_results", { ascending: true });
+	const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*");
 	if (achievementsError) {
 	}
 	const { data: goalValue, error: goalValueError } = await supabase.from("goal_value").select("*");
 
 	if (goalValueError) {
 	}
-	return { props: { year_month, achievements, goalValue }, revalidate: 10 };
+	return { props: { year_month, achievements, goalValue } };
 };
 
 export default Progress;

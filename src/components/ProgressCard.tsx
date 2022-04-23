@@ -13,7 +13,6 @@ type Props = {
 export const ProgressCard = memo((props: Props) => {
 	const { label, total, goal } = props;
 
-	console.log(label);
 	const progressCalc = () => {
 		switch (label) {
 			case "講座開催数":
