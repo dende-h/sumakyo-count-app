@@ -7,7 +7,7 @@ import "react-circular-progressbar/dist/styles.css";
 type Props = {
 	label: string;
 	total: number;
-	goal: goal;
+	goal?: goal;
 };
 
 export const ProgressCard = memo((props: Props) => {
@@ -53,7 +53,7 @@ export const ProgressCard = memo((props: Props) => {
 						</Text>
 						<Divider borderColor={"blue.500"} />
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
-							現在の実績{total}
+							目標数{progressCardContent.goal}
 							{label === "講座開催数" ? "回" : "人"}
 						</Text>
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
