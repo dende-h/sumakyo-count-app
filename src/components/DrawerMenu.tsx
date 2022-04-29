@@ -51,12 +51,6 @@ export const DrawerMenu = memo(() => {
 							</Box>
 							<Divider />
 							<Box p={2} onClick={onClickClose}>
-								<Link href={"/dashboard"}>
-									<a>トータル実績</a>
-								</Link>
-							</Box>
-							<Divider />
-							<Box p={2} onClick={onClickClose}>
 								<Link href={"/progress"}>
 									<a>日報と進捗</a>
 								</Link>

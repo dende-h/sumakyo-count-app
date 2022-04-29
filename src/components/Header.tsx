@@ -10,7 +10,7 @@ export const Header = memo(() => {
 					スマ教実績管理アプリ
 				</Text>
 				<Box lineHeight={["50px", "60px", "70px"]} marginLeft={4}>
-					<Text>ver. 1.1.1</Text>
+					<Text>ver 1.3.1</Text>
 				</Box>
 
 				<Spacer />

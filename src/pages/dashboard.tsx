@@ -135,7 +135,7 @@ const DashBoard = ({ achievements, year_month }) => {
 											<Th></Th>
 											<Th>実績日</Th>
 											<Th>講座開催数</Th>
-											<Th>ユニークユーザー数</Th>
+											<Th>リピートユーザー数</Th>
 											<Th>新規ユーザー数</Th>
 											<Th>MX講座開催数</Th>
 											<Th>MX講座ユーザー数</Th>

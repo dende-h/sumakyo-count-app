@@ -1,3 +1,4 @@
+import { useUser } from "@auth0/nextjs-auth0";
 import { Box, Button, Center, Divider, Input, Select, Spinner, Stack, Text } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
@@ -32,10 +33,15 @@ export type goal = {
 };
 
 const GoalSetting = ({ year_month }) => {
+	const router = useRouter();
+	const { user } = useUser();
+	if (!user) {
+		typeof window === "undefined" ? undefined : router.replace("/api/auth/login");
+	}
+
 	//Loading
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
-	//リダイレクト用
-	const router = useRouter();
+
 	//目標登録成功フラグ
 	const [isSuccess, setIsSuccess] = useState(false);
 
@@ -124,75 +130,84 @@ const GoalSetting = ({ year_month }) => {
 
 	return (
 		<>
-			{isSuccess ? (
-				<Center p={10}>
-					<Spinner />
-				</Center>
-			) : (
-				<Stack>
-					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
-						目標値の設定
-					</Text>
-					<Divider />
-					<Box p={6}>
-						<Text fontSize={"lg"} fontWeight={"bold"}>
-							目標を設定する店舗と年月を選択
-						</Text>
+			{user ? (
+				<>
+					{isSuccess ? (
+						<Center p={10}>
+							<Spinner />
+						</Center>
+					) : (
+						<Stack>
+							<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
+								目標値の設定
+							</Text>
+							<Divider />
+							<Box p={6}>
+								<Text fontSize={"lg"} fontWeight={"bold"}>
+									目標を設定する店舗と年月を選択
+								</Text>
 
-						<Select
-							onChange={selectYearMonth.onChangeSelect}
-							placeholder={"年月を選択"}
-							defaultValue={""}
-							backgroundColor={"white"}
-						>
-							{selectOption.map((item) => {
-								return (
-									<option key={item} value={`${item}`}>
-										{item}
-									</option>
-								);
-							})}
-						</Select>
-						<Select onChange={selectShopName.onChangeSelect} placeholder="店舗を選択" backgroundColor={"white"}>
-							{inputShopName.map((item) => {
-								return (
-									<option key={item} value={item}>
-										{item}
-									</option>
-								);
-							})}
-						</Select>
-					</Box>
-					<Box p={6}>
-						{goalInputValue.map((item, index) => {
-							return (
-								<>
-									<Text fontSize={"lg"} fontWeight={"bold"}>
-										{goalLabel[index]}
-									</Text>
-									<Input
-										type={"number"}
-										value={item.value}
-										onChange={item.onChangeInput}
-										backgroundColor={"white"}
-										marginBottom={4}
-										placeholder={"目標数を入力"}
-									/>
-								</>
-							);
-						})}
-					</Box>
-					<Box>
-						<Button
-							colorScheme="teal"
-							onClick={onClickGoalSet}
-							isDisabled={selectShopName.value === "" || selectYearMonth.value === "" || isLoading}
-							isLoading={isLoading}
-						>
-							目標を設定する
-						</Button>
-					</Box>
-				</Stack>
+								<Select
+									onChange={selectYearMonth.onChangeSelect}
+									placeholder={"年月を選択"}
+									defaultValue={""}
+									backgroundColor={"white"}
+								>
+									{selectOption.map((item) => {
+										return (
+											<option key={item} value={`${item}`}>
+												{item}
+											</option>
+										);
+									})}
+								</Select>
+								<Select onChange={selectShopName.onChangeSelect} placeholder="店舗を選択" backgroundColor={"white"}>
+									{inputShopName.map((item) => {
+										return (
+											<option key={item} value={item}>
+												{item}
+											</option>
+										);
+									})}
+								</Select>
+							</Box>
+							<Box p={6}>
+								{goalInputValue.map((item, index) => {
+									return (
+										<>
+											<Text fontSize={"lg"} fontWeight={"bold"}>
+												{goalLabel[index]}
+											</Text>
+											<Input
+												type={"number"}
+												value={item.value}
+												onChange={item.onChangeInput}
+												backgroundColor={"white"}
+												marginBottom={4}
+												placeholder={"目標数を入力"}
+											/>
+										</>
+									);
+								})}
+							</Box>
+							<Box>
+								<Button
+									colorScheme="teal"
+									onClick={onClickGoalSet}
+									isDisabled={selectShopName.value === "" || selectYearMonth.value === "" || isLoading}
+									isLoading={isLoading}
+								>
+									目標を設定する
+								</Button>
+							</Box>
+						</Stack>
+					)}
+				</>
+			) : (
+				<Box m={4}>
+					<Text fontSize={"20px"}>認証されていません。</Text>
+					<Text fontSize={"20px"}>ログインページへ遷移します。</Text>
+				</Box>
 			)}
 		</>
 	);

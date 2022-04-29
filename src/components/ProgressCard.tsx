@@ -13,7 +13,9 @@ type Props = {
 export const ProgressCard = memo((props: Props) => {
 	const { label, total, goal } = props;
 
-	console.log(label);
+	//goalがundefinedの場合は計算されない
+	// const progressCardContentCalc = () => {
+	// 	if (goal) {
 	const progressCalc = () => {
 		switch (label) {
 			case "講座開催数":
@@ -41,8 +43,11 @@ export const ProgressCard = memo((props: Props) => {
 				return null;
 		}
 	};
-
 	const progressCardContent = progressCalc();
+
+	//}
+	// };
+	// const progressCardContent = progressCardContentCalc();
 
 	return (
 		<>
@@ -54,7 +59,7 @@ export const ProgressCard = memo((props: Props) => {
 						</Text>
 						<Divider borderColor={"blue.500"} />
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
-							現在の実績{total}
+							目標数{progressCardContent.goal}
 							{label === "講座開催数" ? "回" : "人"}
 						</Text>
 						<Text fontSize={["md", "lg", "x-large"]} fontWeight={"bold"}>
