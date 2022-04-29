@@ -17,7 +17,16 @@ import {
 	Thead,
 	Tr,
 	Wrap,
-	WrapItem
+	WrapItem,
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	PopoverHeader,
+	PopoverBody,
+	PopoverFooter,
+	PopoverArrow,
+	PopoverCloseButton,
+	PopoverAnchor
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { goalValueState } from "../globalState/goalValueState";
@@ -38,6 +47,7 @@ import { format } from "date-fns";
 import { DashBoardCard } from "../components/DashBoardCard";
 import { TotalIncomeCard } from "../components/TotalIncomeCard";
 import { TotalFeeCard } from "../components/TotalFeeCard";
+import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -98,6 +108,9 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 		setIsShowTable(false);
 	};
 
+	//日報の日付変更のPopoverの表示非表示のstate
+	const [isOpenPopover, setIsOpenPopover] = useState(false);
+
 	return (
 		<>
 			{user ? (
@@ -137,6 +150,28 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 					</Stack>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
 						{selectedDate}の日報
+						<Popover
+							onOpen={() => setIsOpenPopover(true)}
+							onClose={() => {
+								setIsOpenPopover(false);
+							}}
+						>
+							<PopoverTrigger>
+								<Button marginX={3} size={"sm"} colorScheme={isOpenPopover ? "orange" : "facebook"}>
+									日付変更
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent>
+								<PopoverArrow />
+								<PopoverCloseButton />
+								<PopoverHeader>対象の日付を選んで下さい</PopoverHeader>
+								<PopoverBody textAlign={"center"}>
+									<Box backgroundColor={"gray.100"} h={10} p={2}>
+										<CustomDatePickerCalendar />
+									</Box>
+								</PopoverBody>
+							</PopoverContent>
+						</Popover>
 					</Text>
 					<Wrap p={"4"}>
 						{achievementArray.length === 0 && (
