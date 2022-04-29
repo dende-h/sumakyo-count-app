@@ -24,8 +24,6 @@ const supabase: SupabaseClient = createClient(
 export const EditGoalItemsCard = memo((props: Props) => {
 	const { editItem, clickCancel } = props;
 
-	console.log(editItem);
-
 	//ローディングの状態を表すグローバルステイト
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 	//編集するachievementsのグローバルステイト配列

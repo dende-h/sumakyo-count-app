@@ -79,8 +79,6 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	const selectedDate = useRecoilValue(dateState);
 	const achievementArray = useRecoilValue(dateOfAchievement);
 
-	console.log(achievementArray.length);
-
 	const onSelectShopName = useRecoilValue(onSelectedShopName);
 	const onSelectYearMonth = useRecoilValue(onSelectYearMonthState);
 

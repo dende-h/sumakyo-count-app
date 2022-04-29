@@ -8,7 +8,6 @@ type Props = {
 
 export const DailyCard: VFC<Props> = memo((props: Props) => {
 	const { achievement } = props;
-	console.log(achievement);
 
 	return (
 		<>
