@@ -7,48 +7,47 @@ import "react-circular-progressbar/dist/styles.css";
 type Props = {
 	label: string;
 	total: number;
-	goal?: goal;
+	goal: goal;
 };
 
 export const ProgressCard = memo((props: Props) => {
 	const { label, total, goal } = props;
 
 	//goalがundefinedの場合は計算されない
-	const progressCardContentCalc = () => {
-		if (goal) {
-			const progressCalc = () => {
-				switch (label) {
-					case "講座開催数":
-						//残り件数
-						const remainingSeminar = goal.seminar_goal - total;
-						//進捗率
-						const rateOfProgressSeminar = total / goal.seminar_goal;
+	// const progressCardContentCalc = () => {
+	// 	if (goal) {
+	const progressCalc = () => {
+		switch (label) {
+			case "講座開催数":
+				//残り件数
+				const remainingSeminar = goal.seminar_goal - total;
+				//進捗率
+				const rateOfProgressSeminar = total / goal.seminar_goal;
 
-						return { goal: goal.seminar_goal, remaining: remainingSeminar, rateOfProgress: rateOfProgressSeminar };
-					case "リピートユーザー数":
-						//残り件数
-						const remainingUniqueUser = goal.u_user_goal - total;
-						//進捗率
-						const rateOfProgressUniqueUser = total / goal.u_user_goal;
+				return { goal: goal.seminar_goal, remaining: remainingSeminar, rateOfProgress: rateOfProgressSeminar };
+			case "リピートユーザー数":
+				//残り件数
+				const remainingUniqueUser = goal.u_user_goal - total;
+				//進捗率
+				const rateOfProgressUniqueUser = total / goal.u_user_goal;
 
-						return { goal: goal.u_user_goal, remaining: remainingUniqueUser, rateOfProgress: rateOfProgressUniqueUser };
-					case "新規ユーザー数":
-						//残り件数
-						const remainingNewUser = goal.new_user_goal - total;
-						//進捗率
-						const rateOfProgressNewUser = total / goal.new_user_goal;
+				return { goal: goal.u_user_goal, remaining: remainingUniqueUser, rateOfProgress: rateOfProgressUniqueUser };
+			case "新規ユーザー数":
+				//残り件数
+				const remainingNewUser = goal.new_user_goal - total;
+				//進捗率
+				const rateOfProgressNewUser = total / goal.new_user_goal;
 
-						return { goal: goal.new_user_goal, remaining: remainingNewUser, rateOfProgress: rateOfProgressNewUser };
-					default:
-						return null;
-				}
-			};
-			const progressCardContent = progressCalc();
-
-			return progressCardContent;
+				return { goal: goal.new_user_goal, remaining: remainingNewUser, rateOfProgress: rateOfProgressNewUser };
+			default:
+				return null;
 		}
 	};
-	const progressCardContent = progressCardContentCalc();
+	const progressCardContent = progressCalc();
+
+	//}
+	// };
+	// const progressCardContent = progressCardContentCalc();
 
 	return (
 		<>

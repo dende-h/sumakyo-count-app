@@ -46,7 +46,7 @@ const supabase: SupabaseClient = createClient(
 );
 
 const Progress = ({ year_month, achievements, goalValue }) => {
-	const { inputShopName, selectOption, selectShopName, selectYearMonth } = useYearMonthDataSet({
+	const { selectOption, selectShopName, selectYearMonth, shopNameList } = useYearMonthDataSet({
 		year_month
 	});
 
@@ -69,6 +69,8 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	const selectedDate = useRecoilValue(dateState);
 	const achievementArray = useRecoilValue(dateOfAchievement);
 
+	console.log(achievementArray.length);
+
 	const onSelectShopName = useRecoilValue(onSelectedShopName);
 	const onSelectYearMonth = useRecoilValue(onSelectYearMonthState);
 
@@ -76,12 +78,11 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 	const selectedGoalValueArray = goal.filter((item) => {
 		return item.shop_name_month.includes(onSelectShopName) && item.shop_name_month.includes(onSelectYearMonth);
 	});
-	console.log(selectedGoalValueArray);
+
 	//オブジェクトに変換
 	const selectedGoalValueObjectArray = { ...selectedGoalValueArray };
-	console.log(selectedGoalValueObjectArray);
+
 	const selectedGoalValueObject = selectedGoalValueObjectArray[0];
-	console.log(selectedGoalValueObject);
 
 	//テーブルの表示非表示Flag
 	const [isShowTable, setIsShowTable] = useState<boolean>(false);
@@ -108,7 +109,7 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 						<Select
 							onChange={selectYearMonth.onChangeSelect}
 							placeholder={"年月を選択"}
-							defaultValue={""}
+							defaultValue={onSelectYearMonth}
 							backgroundColor={"white"}
 						>
 							{selectOption.map((item) => {
@@ -122,10 +123,10 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 						<Select
 							onChange={selectShopName.onChangeSelect}
 							placeholder={"店舗を選択"}
-							defaultValue={""}
+							defaultValue={onSelectShopName}
 							backgroundColor={"white"}
 						>
-							{inputShopName.map((item) => {
+							{shopNameList.map((item) => {
 								return (
 									<option key={item} value={`${item}`}>
 										{item}
@@ -138,9 +139,20 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 						{selectedDate}の日報
 					</Text>
 					<Wrap p={"4"}>
-						{achievementArray.map((item) => {
-							return <DailyCard key={item.id} achievement={item} />;
-						})}
+						{achievementArray.length === 0 && (
+							<WrapItem>
+								<Text>表示対象がありません</Text>
+							</WrapItem>
+						)}
+						{onSelectShopName !== "全店舗" ? (
+							achievementArray.map((item) => {
+								return <DailyCard key={item.id} achievement={item} />;
+							})
+						) : (
+							<WrapItem>
+								<Text>全店舗は日別実績表示対象外</Text>
+							</WrapItem>
+						)}
 					</Wrap>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						TOTAL実績
@@ -160,17 +172,19 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 						進捗率と目標までの残数
 					</Text>
 					<Wrap p={"4"}>
-						{totalAchievements.map((item) => {
-							return (
-								<WrapItem key={item.label}>
-									<ProgressCard
-										label={item.label}
-										total={item.total}
-										goal={selectedGoalValueObject && selectedGoalValueObject}
-									/>
-								</WrapItem>
-							);
-						})}
+						{selectedGoalValueObject ? (
+							totalAchievements.map((item) => {
+								return (
+									<WrapItem key={item.label}>
+										<ProgressCard label={item.label} total={item.total} goal={selectedGoalValueObject} />
+									</WrapItem>
+								);
+							})
+						) : (
+							<WrapItem>
+								<Text>表示対象がありません</Text>
+							</WrapItem>
+						)}
 					</Wrap>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						手数料見込み

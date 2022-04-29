@@ -3,11 +3,12 @@ import { memo, VFC } from "react";
 import { userCount } from "../pages";
 
 type Props = {
-	achievement: userCount;
+	achievement?: userCount;
 };
 
 export const DailyCard: VFC<Props> = memo((props: Props) => {
 	const { achievement } = props;
+	console.log(achievement);
 
 	return (
 		<>
@@ -69,7 +70,9 @@ export const DailyCard: VFC<Props> = memo((props: Props) => {
 						</Stack>
 					</WrapItem>
 				</>
-			) : undefined}
+			) : (
+				<Text>表示対象がありません</Text>
+			)}
 		</>
 	);
 });
