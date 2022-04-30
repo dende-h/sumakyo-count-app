@@ -23,10 +23,8 @@ import {
 	PopoverContent,
 	PopoverHeader,
 	PopoverBody,
-	PopoverFooter,
 	PopoverArrow,
-	PopoverCloseButton,
-	PopoverAnchor
+	PopoverCloseButton
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { goalValueState } from "../globalState/goalValueState";
@@ -210,33 +208,39 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
 						進捗率と目標までの残数
 					</Text>
-					<Wrap p={"4"}>
-						{selectedGoalValueObject ? (
-							totalAchievements.map((item) => {
-								return (
-									<WrapItem key={item.label}>
-										<ProgressCard label={item.label} total={item.total} goal={selectedGoalValueObject} />
-									</WrapItem>
-								);
-							})
-						) : (
-							<WrapItem>
-								<Text>表示対象がありません</Text>
-							</WrapItem>
-						)}
-					</Wrap>
+					<Box>
+						<Wrap p={"4"}>
+							{selectedGoalValueObject ? (
+								totalAchievements.map((item) => {
+									return (
+										<WrapItem key={item.label}>
+											<ProgressCard label={item.label} total={item.total} goal={selectedGoalValueObject} />
+										</WrapItem>
+									);
+								})
+							) : (
+								<WrapItem>
+									<Text>表示対象がありません</Text>
+								</WrapItem>
+							)}
+						</Wrap>
+					</Box>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4}>
 						手数料見込み
 					</Text>
 					<Box>
-						<Wrap p={"4"} marginLeft={-2}>
-							{totalAchievements.map((item) => {
-								return (
-									<WrapItem key={item.label}>
-										<TotalFeeCard label={item.label} total={item.total} />
-									</WrapItem>
-								);
-							})}
+						<Wrap p={"4"}>
+							{totalAchievements
+								.filter((item) => {
+									return item.label === "リピートユーザー数" || item.label === "新規ユーザー数";
+								})
+								.map((item) => {
+									return (
+										<WrapItem key={item.label}>
+											<TotalFeeCard label={item.label} total={item.total} />
+										</WrapItem>
+									);
+								})}
 							<WrapItem>
 								<TotalIncomeCard />
 							</WrapItem>

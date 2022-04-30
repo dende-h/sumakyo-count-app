@@ -31,7 +31,9 @@ export const TotalFeeCard = memo((props: Props) => {
 
 	return (
 		<>
-			{totalFee === null ? undefined : (
+			{totalFee === null ? (
+				<></>
+			) : (
 				<Stack p={4} w={"250px"} backgroundColor={"twitter.100"} textAlign="center" borderRadius={"md"}>
 					<Text fontSize={"lg"} fontWeight="bold">
 						{totalFee.uuFeeLabel || totalFee.nuFeeLabel}
