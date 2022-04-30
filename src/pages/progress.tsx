@@ -48,6 +48,7 @@ import { DashBoardCard } from "../components/DashBoardCard";
 import { TotalIncomeCard } from "../components/TotalIncomeCard";
 import { TotalFeeCard } from "../components/TotalFeeCard";
 import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
+import { NewUserRate } from "../components/NewUserRate";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -60,7 +61,9 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 		year_month
 	});
 
-	const { totalAchievements, showAchievements } = useAchievementDataSet({ achievements });
+	const { totalAchievements, showAchievements, newUserTotal, repeatUserTotal } = useAchievementDataSet({
+		achievements
+	});
 
 	const router = useRouter();
 	const { user } = useUser();
@@ -199,6 +202,9 @@ const Progress = ({ year_month, achievements, goalValue }) => {
 									</WrapItem>
 								);
 							})}
+							<WrapItem>
+								<NewUserRate label={"新規ユーザー率"} newUser={newUserTotal.total} repeatUser={repeatUserTotal.total} />
+							</WrapItem>
 						</Wrap>
 					</Box>
 					<Text fontSize={"lg"} fontWeight={"bold"} marginLeft={4} marginTop={4}>
