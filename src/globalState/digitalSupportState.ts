@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
-type digitalSupport = {
-	id: number;
+export type digitalSupport = {
+	id?: number;
 	event_name: string;
 	participants: number;
 	event_date: string;
