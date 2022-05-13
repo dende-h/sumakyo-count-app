@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
 import { InputItemsCard } from "../components/InputItemsCard";
@@ -60,7 +61,27 @@ const DigitalSupport = ({ digital_support }) => {
 		});
 	}, [eventName.value, participants.count, inputDate, shopName.value, halfCount]);
 
-	const onSubmit = () => {};
+	const onSubmit = async () => {
+		setIsLoading(true);
+
+		const { error } = await supabase.from("digital_support").insert(digitalSupportAchievement);
+
+		//カウントデータの初期化
+		participants.setCount(0);
+		setHalfCount(false);
+		eventName.setValue("");
+		shopName.setValue("");
+
+		if (error) {
+			//エラー時のコンソール表示
+			toast.error(error.message);
+			setIsLoading(false);
+		} else {
+			toast.success("登録完了しました");
+			setIsLoading(false);
+		}
+		console.log(digitalSupportAchievement);
+	};
 
 	return (
 		<>
