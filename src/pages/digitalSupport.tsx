@@ -23,7 +23,6 @@ import { shopNameArray } from "../globalState/shopNameArray";
 import { ShowDigitalSupportCard } from "../components/ShowDigitalSupportCard";
 import { showDigitalSupportAchievements } from "../globalState/selector/showDigitalSupportAchievements";
 import { tabIndexState } from "../globalState/tabIndexState";
-import { isHTMLElement } from "@chakra-ui/utils";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -70,11 +69,23 @@ const DigitalSupport = ({ digital_support }) => {
 	const halfCountData = filterData.filter((item) => {
 		return item.half_count;
 	});
-	console.log(halfCountData);
 	const oneCountData = filterData.filter((item) => {
 		return !item.half_count;
 	});
-	console.log(oneCountData);
+
+	//手数料カウント
+	const minFee =
+		filterData.filter((item) => {
+			return item.participants === 1;
+		}).length * 3200;
+	const maxFee =
+		filterData.filter((item) => {
+			return item.participants >= 2;
+		}).length * 6400;
+
+	//手数料合計
+	const totalFee = minFee + maxFee;
+
 	return (
 		<>
 			<Box m={4}>
@@ -87,13 +98,24 @@ const DigitalSupport = ({ digital_support }) => {
 					<Center>
 						<Wrap fontSize={["large", "x-large"]} fontWeight={"bold"} m={2} spacing={[5, 8, 10]}>
 							<WrapItem>
-								<Text>デジ活教室実施回数：{oneCountData.length + halfCountData.length / 2}回</Text>
+								<Text
+									color={oneCountData.length + halfCountData.length / 2 >= digitalSupportGoalSetting && "orange.500"}
+								>
+									デジ活教室実施回数：{oneCountData.length + halfCountData.length / 2}回
+								</Text>
 							</WrapItem>
 							<WrapItem>
-								<Text>Min目標まで残り{digitalSupportGoalSetting - filterData.length}回</Text>
+								<Text color={digitalSupportGoalSetting - filterData.length <= 0 && "orange.500"}>
+									Min目標まで残り{digitalSupportGoalSetting - filterData.length}回
+								</Text>
 							</WrapItem>
 							<WrapItem>
-								<Text>指定講座実施状況：現在{eventImplementation.filter((item) => item === true).length}講座達成</Text>
+								<Text color={eventImplementation.filter((item) => item === true).length >= 5 && "orange.500"}>
+									指定講座実施状況：現在{eventImplementation.filter((item) => item === true).length}講座達成
+								</Text>
+							</WrapItem>
+							<WrapItem>
+								<Text>現在手数料見込み：{totalFee}円</Text>
 							</WrapItem>
 						</Wrap>
 					</Center>
