@@ -1,4 +1,21 @@
-import { Box, Button, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+	Box,
+	Button,
+	Divider,
+	Select,
+	Stack,
+	Text,
+	Wrap,
+	WrapItem,
+	Center,
+	Tabs,
+	TabList,
+	TabPanels,
+	TabPanel,
+	Tab,
+	useColorMode,
+	useColorModeValue
+} from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -22,6 +39,18 @@ const supabase: SupabaseClient = createClient(
 );
 
 const DigitalSupport = ({ digital_support }) => {
+	//タブのカラー設定
+	const tabColors = useColorModeValue(["teal.50", "blue.100", "orange.100"], ["teal.900", "twitter.900", "orange.900"]);
+	//選択しているタブのindexナンバー
+	const [tabIndex, setTabIndex] = useState(0);
+	//indexによって背景色変更
+	const tabBgColor = tabColors[tabIndex];
+
+	const tabNameArray = useRecoilValue(shopNameArray).filter((item) => item !== "全店舗");
+
+	//選択しているタブによってdigital_supportをfilterする
+	// const showDigitalSupportArray =
+
 	return (
 		<>
 			<Box m={4}>
@@ -31,6 +60,37 @@ const DigitalSupport = ({ digital_support }) => {
 					</Text>
 					<Divider borderColor={"gray.500"} />
 					<DigitalSupportInputModal digital_support={digital_support} />
+					<Center>
+						<Wrap fontSize={["large", "x-large"]} fontWeight={"bold"} m={2} spacing={[5, 8, 10]}>
+							<WrapItem>
+								<Text>現在のトータル実施回数</Text>
+							</WrapItem>
+							<WrapItem>
+								<Text>Min目標まであと何回</Text>
+							</WrapItem>
+							<WrapItem>
+								<Text>主要項目実施状況</Text>
+							</WrapItem>
+						</Wrap>
+					</Center>
+					<Divider borderColor={"gray.500"} />
+					<Tabs
+						onChange={(index) => {
+							setTabIndex(index);
+						}}
+						variant="enclosed"
+					>
+						<TabList>
+							{tabNameArray.map((item, index) => {
+								return <Tab bg={tabIndex === index ? tabBgColor : "gray.100"}>{item}</Tab>;
+							})}
+						</TabList>
+						<TabPanels bg={tabBgColor}>
+							<TabPanel>1</TabPanel>
+							<TabPanel>2</TabPanel>
+							<TabPanel>3</TabPanel>
+						</TabPanels>
+					</Tabs>
 				</Stack>
 			</Box>
 		</>

@@ -101,6 +101,12 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 			toast.error(error.message);
 			setIsLoading(false);
 		} else {
+			const { data, error } = await supabase.from("digital_support").select("*");
+			if (error) {
+			} else {
+				const newDigitalSupport = data;
+				setDigitalSuportAchievements(newDigitalSupport);
+			}
 			toast.success("登録完了しました");
 			setIsLoading(false);
 			cancel();
