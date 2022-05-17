@@ -23,6 +23,7 @@ import { shopNameArray } from "../globalState/shopNameArray";
 import { ShowDigitalSupportCard } from "../components/ShowDigitalSupportCard";
 import { showDigitalSupportAchievements } from "../globalState/selector/showDigitalSupportAchievements";
 import { tabIndexState } from "../globalState/tabIndexState";
+import { isHTMLElement } from "@chakra-ui/utils";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -42,7 +43,10 @@ const DigitalSupport = ({ digital_support }) => {
 	//教室のミニマム目標値の定義
 	const digitalSupportGoalSetting: number = 35;
 	//タブのカラー設定
-	const tabColors = useColorModeValue(["teal.50", "blue.100", "orange.100"], ["teal.900", "twitter.900", "orange.900"]);
+	const tabColors = useColorModeValue(
+		["teal.100", "blue.100", "orange.100"],
+		["teal.900", "twitter.900", "orange.900"]
+	);
 	//選択しているタブのindexナンバー
 	const [tabIndex, setTabIndex] = useRecoilState(tabIndexState);
 	//indexによって背景色変更
@@ -55,23 +59,35 @@ const DigitalSupport = ({ digital_support }) => {
 
 	//指定5講座が実績にあるかどうか
 	const eventNameArray = useRecoilValue(digitalSupportEventArray);
-	const eventImplementation = eventNameArray.map((item) => {
+	const designatedCourses = eventNameArray.filter((item) => {
+		return item !== "ワクチン接種WEB申し込み" && item !== "相談会";
+	});
+	const eventImplementation = designatedCourses.map((item) => {
 		return filterData.map((item) => item.event_name).includes(item);
 	});
 
+	//0.5回カウント
+	const halfCountData = filterData.filter((item) => {
+		return item.half_count;
+	});
+	console.log(halfCountData);
+	const oneCountData = filterData.filter((item) => {
+		return !item.half_count;
+	});
+	console.log(oneCountData);
 	return (
 		<>
 			<Box m={4}>
 				<Stack>
 					<Text fontSize={"x-large"} fontWeight="bold">
-						デジタル活用支援実績
+						デジタル活用支援実績（Min目標{digitalSupportGoalSetting}回）
 					</Text>
 					<Divider borderColor={"gray.500"} />
 					<DigitalSupportInputModal digital_support={digital_support} />
 					<Center>
 						<Wrap fontSize={["large", "x-large"]} fontWeight={"bold"} m={2} spacing={[5, 8, 10]}>
 							<WrapItem>
-								<Text>デジ活教室実施回数：{filterData.length}回</Text>
+								<Text>デジ活教室実施回数：{oneCountData.length + halfCountData.length / 2}回</Text>
 							</WrapItem>
 							<WrapItem>
 								<Text>Min目標まで残り{digitalSupportGoalSetting - filterData.length}回</Text>
@@ -99,7 +115,12 @@ const DigitalSupport = ({ digital_support }) => {
 						<TabList>
 							{tabNameArray.map((item, index) => {
 								return (
-									<Tab key={index} bg={tabIndex === index ? tabBgColor : "gray.100"} fontSize={["sm", "md", "large"]}>
+									<Tab
+										key={index}
+										bg={tabIndex === index ? tabBgColor : "gray.100"}
+										fontSize={["sm", "md", "large"]}
+										fontWeight="bold"
+									>
 										{item}
 									</Tab>
 								);
