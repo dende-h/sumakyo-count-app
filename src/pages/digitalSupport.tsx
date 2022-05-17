@@ -1,8 +1,6 @@
 import {
 	Box,
-	Button,
 	Divider,
-	Select,
 	Stack,
 	Text,
 	Wrap,
@@ -13,24 +11,16 @@ import {
 	TabPanels,
 	TabPanel,
 	Tab,
-	useColorMode,
 	useColorModeValue
 } from "@chakra-ui/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { DigitalSupportInputModal } from "../components/DigitalSupportInputModal";
-import { InputItemsCard } from "../components/InputItemsCard";
-import { dateState } from "../globalState/dateState";
 import { digitalSupportEventArray } from "../globalState/digitalSupportEventArray";
 import { digitalSupport, digitalSupportState } from "../globalState/digitalSupportState";
-import { isLoadingState } from "../globalState/isLoadingState";
 import { shopNameArray } from "../globalState/shopNameArray";
-import { useCountUpDown } from "../hooks/useCountUpDown";
-import { useSelectOnChange } from "../hooks/useSelectOnChange";
-import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
+import { ShowDigitalSupportCard } from "../components/ShowDigitalSupportCard";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -39,17 +29,44 @@ const supabase: SupabaseClient = createClient(
 );
 
 const DigitalSupport = ({ digital_support }) => {
+	const setDigitalSupportAchievements = useSetRecoilState(digitalSupportState);
+	useEffect(() => {
+		setDigitalSupportAchievements([...digital_support]);
+	}, []);
+	//塩山店を０、東山梨店を１、一宮イッツモア店２でタブindexと併せて定義
+	const enzanShop: number = 0;
+	const higashiYamanshiShop: number = 1;
+	const ichinomiyaShop: number = 2;
+	//教室のミニマム目標値の定義
+	const digitalSupportGoalSetting: number = 35;
 	//タブのカラー設定
 	const tabColors = useColorModeValue(["teal.50", "blue.100", "orange.100"], ["teal.900", "twitter.900", "orange.900"]);
 	//選択しているタブのindexナンバー
-	const [tabIndex, setTabIndex] = useState(0);
+	const [tabIndex, setTabIndex] = useState(enzanShop);
 	//indexによって背景色変更
 	const tabBgColor = tabColors[tabIndex];
 
 	const tabNameArray = useRecoilValue(shopNameArray).filter((item) => item !== "全店舗");
 
 	//選択しているタブによってdigital_supportをfilterする
-	// const showDigitalSupportArray =
+	const initialdata = useRecoilValue(digitalSupportState);
+	const initialDigitalSupport: digitalSupport[] = initialdata.filter((item) => {
+		return item.shop_name === tabNameArray[enzanShop];
+	});
+
+	const [digitalSupportArray, setDigitalSupportArray] = useState(initialDigitalSupport);
+
+	useEffect(() => {
+		const newShowDigitalSupportArray = initialdata.filter((item) => {
+			return item.shop_name === tabNameArray[tabIndex];
+		});
+		setDigitalSupportArray(newShowDigitalSupportArray);
+	}, [tabIndex]);
+	//指定5講座が実績にあるかどうか
+	const eventNameArray = useRecoilValue(digitalSupportEventArray);
+	const eventImplementation = eventNameArray.map((item) => {
+		return digitalSupportArray.map((item) => item.event_name).includes(item);
+	});
 
 	return (
 		<>
@@ -63,32 +80,50 @@ const DigitalSupport = ({ digital_support }) => {
 					<Center>
 						<Wrap fontSize={["large", "x-large"]} fontWeight={"bold"} m={2} spacing={[5, 8, 10]}>
 							<WrapItem>
-								<Text>現在のトータル実施回数</Text>
+								<Text>デジ活教室実施回数：{digitalSupportArray.length}回</Text>
 							</WrapItem>
 							<WrapItem>
-								<Text>Min目標まであと何回</Text>
+								<Text>Min目標まで残り{digitalSupportGoalSetting - digitalSupportArray.length}回</Text>
 							</WrapItem>
 							<WrapItem>
-								<Text>主要項目実施状況</Text>
+								<Text>指定講座実施状況：現在{eventImplementation.filter((item) => item === true).length}講座達成</Text>
 							</WrapItem>
 						</Wrap>
 					</Center>
 					<Divider borderColor={"gray.500"} />
 					<Tabs
 						onChange={(index) => {
-							setTabIndex(index);
+							if (index === enzanShop) {
+								setTabIndex(enzanShop);
+							}
+							if (index === higashiYamanshiShop) {
+								setTabIndex(higashiYamanshiShop);
+							}
+							if (index === ichinomiyaShop) {
+								setTabIndex(ichinomiyaShop);
+							}
 						}}
 						variant="enclosed"
 					>
 						<TabList>
 							{tabNameArray.map((item, index) => {
-								return <Tab bg={tabIndex === index ? tabBgColor : "gray.100"}>{item}</Tab>;
+								return (
+									<Tab bg={tabIndex === index ? tabBgColor : "gray.100"} fontSize={["sm", "md", "large"]}>
+										{item}
+									</Tab>
+								);
 							})}
 						</TabList>
 						<TabPanels bg={tabBgColor}>
-							<TabPanel>1</TabPanel>
-							<TabPanel>2</TabPanel>
-							<TabPanel>3</TabPanel>
+							<TabPanel>
+								<ShowDigitalSupportCard showDigitalSupportArray={digitalSupportArray} />
+							</TabPanel>
+							<TabPanel>
+								<ShowDigitalSupportCard showDigitalSupportArray={digitalSupportArray} />
+							</TabPanel>
+							<TabPanel>
+								<ShowDigitalSupportCard showDigitalSupportArray={digitalSupportArray} />
+							</TabPanel>
 						</TabPanels>
 					</Tabs>
 				</Stack>
@@ -98,7 +133,10 @@ const DigitalSupport = ({ digital_support }) => {
 };
 
 export const getServerSideProps = async () => {
-	const { data: digital_support, error } = await supabase.from("digital_support").select("*");
+	const { data: digital_support, error } = await supabase
+		.from("digital_support")
+		.select("*")
+		.order("event_date", { ascending: true });
 	if (error) {
 	}
 	return { props: { digital_support } };

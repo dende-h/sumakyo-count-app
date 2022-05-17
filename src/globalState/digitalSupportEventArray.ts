@@ -1,13 +1,13 @@
 import { atom } from "recoil";
 
 const initialDigitalSupportNameArray = [
-	"マイナンバーカード",
-	"マイナポータル",
-	"マイナポイント",
-	"オンライン診療",
-	"ワクチン証明書アプリ",
-	"ワクチン接種予約",
-	"操作相談"
+	"マイナンバーカード申請講座",
+	"マイナポータル講座",
+	"マイナポイント予約・申込講座",
+	"オンライン診療講座",
+	"ワクチンパスポート発行講座",
+	"ワクチン接種WEB申し込み",
+	"相談会"
 ];
 
 export const digitalSupportEventArray = atom({
