@@ -76,7 +76,7 @@ export const EditGoalItemsCard = memo((props: Props) => {
 
 		if (error) {
 			//エラー時のコンソール表示
-			toast.error(error.message);
+			toast.error(error.details);
 			setIsLoading(false);
 		} else {
 			const { data, error } = await supabase.from("goal_value").select("*");

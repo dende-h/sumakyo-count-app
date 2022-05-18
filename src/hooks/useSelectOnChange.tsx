@@ -6,5 +6,5 @@ export const useSelectOnChange = () => {
 	const onChangeSelect: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
 		setValue(e.target.value);
 	}, []);
-	return { value, onChangeSelect };
+	return { value, onChangeSelect, setValue };
 };

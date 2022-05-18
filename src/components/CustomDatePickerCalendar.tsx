@@ -1,4 +1,4 @@
-import { memo, useState, VFC } from "react";
+import { memo, useEffect, useState, VFC } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ja from "date-fns/locale/ja";
@@ -11,11 +11,21 @@ import { dateState } from "../globalState/dateState";
 
 registerLocale("ja", ja);
 
-export const CustomDatePickerCalendar: VFC = memo(() => {
-	const initialDate = new Date();
-	const setDefaultDate = useSetRecoilState(dateState);
+type Props = {
+	inputDate?: string;
+};
 
+export const CustomDatePickerCalendar: VFC<Props> = memo((props: Props) => {
+	const { inputDate } = props;
+	const initialDate = new Date();
 	const [startDate, setStartDate] = useState<Date>(initialDate);
+	useEffect(() => {
+		if (inputDate) {
+			setStartDate(new Date(inputDate));
+		}
+	}, []);
+
+	const setDefaultDate = useSetRecoilState(dateState);
 
 	const getInputDate = (event: Date) => {
 		setStartDate(event);

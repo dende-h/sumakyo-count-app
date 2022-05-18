@@ -21,7 +21,7 @@ export const DrawerMenu = memo(() => {
 	const onClickClose = () => {
 		setTimeout(() => {
 			onClose();
-		}, 500);
+		}, 1200);
 	};
 
 	return (
@@ -53,6 +53,12 @@ export const DrawerMenu = memo(() => {
 							<Box p={2} onClick={onClickClose}>
 								<Link href={"/progress"}>
 									<a>日報と進捗</a>
+								</Link>
+							</Box>
+							<Divider />
+							<Box p={2} onClick={onClickClose}>
+								<Link href={"/digitalSupport"}>
+									<a>デジタル活用支援</a>
 								</Link>
 							</Box>
 							<Divider />
