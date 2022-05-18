@@ -72,6 +72,18 @@ const DigitalSupport = ({ digital_support }) => {
 		return filterData.map((item) => item.event_name).includes(item);
 	});
 
+	//それぞれの講座の回数
+	// 	"マイナンバーカード申請講座",
+	// "マイナポータル講座",
+	// 	"マイナポイント予約・申込講座",
+	// 	"オンライン診療講座",
+	// 	"ワクチンパスポート発行講座",
+	// 	"ワクチン接種WEB申し込み",
+	// 	"相談会";
+	const consultationCount = filterData.filter((item) => {
+		return item.event_name === "相談会";
+	}).length;
+
 	//0.5回カウント
 	const halfCountData = filterData.filter((item) => {
 		return item.half_count;
@@ -79,6 +91,35 @@ const DigitalSupport = ({ digital_support }) => {
 	const oneCountData = filterData.filter((item) => {
 		return !item.half_count;
 	});
+
+	//デジタル活用支援の実施回数
+	//相談会はカウント対象外、ワクチンパスポートとワクチン申し込みは0.5カウント同月内小数点以下切り下げ
+	//開催期間の配列
+	const holdingPeriod = [
+		"2022/05",
+		"2022/06",
+		"2022/07",
+		"2022/08",
+		"2022/09",
+		"2022/10",
+		"2022/11",
+		"2022/12",
+		"2023/01",
+		"2023/02"
+	];
+	//上記配列を含む日付でグループ分けした要素数を2で割り小数点を切り下げる
+	const vaccineSeminarCount = holdingPeriod.map((item) => {
+		//指定した月を含む配列の要素数
+		const vaccineSeminarCountByMonth = halfCountData.filter((obj) => {
+			return obj.event_date.includes(item);
+		}).length;
+		return Math.floor(vaccineSeminarCountByMonth / 2);
+	});
+	const totalVaccineSeminarCount = vaccineSeminarCount.reduce((sum, element) => {
+		return sum + element;
+	}, 0);
+
+	console.log(totalVaccineSeminarCount);
 
 	//手数料カウント
 	const minFee =
@@ -108,7 +149,7 @@ const DigitalSupport = ({ digital_support }) => {
 								<Text
 									color={oneCountData.length + halfCountData.length / 2 >= digitalSupportGoalSetting && "orange.500"}
 								>
-									デジ活教室実施回数：{oneCountData.length + halfCountData.length / 2}回
+									デジ活教室実施回数：{oneCountData.length - consultationCount + halfCountData.length / 2}回
 								</Text>
 							</WrapItem>
 							<WrapItem>

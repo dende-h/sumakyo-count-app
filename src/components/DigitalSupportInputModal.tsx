@@ -90,12 +90,6 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 
 		const { error } = await supabase.from("digital_support").insert(digitalSupportAchievement);
 
-		//カウントデータの初期化
-		participants.setCount(0);
-		setHalfCount(false);
-		eventName.setValue("");
-		shopName.setValue("");
-
 		if (error) {
 			//エラー時のコンソール表示
 			toast.error(error.message);
@@ -108,6 +102,7 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 				setDigitalSuportAchievements(newDigitalSupport);
 			}
 			toast.success("登録完了しました");
+			participants.setCount(0);
 			setIsLoading(false);
 			cancel();
 		}
