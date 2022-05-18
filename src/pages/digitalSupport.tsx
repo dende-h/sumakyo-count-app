@@ -23,6 +23,8 @@ import { shopNameArray } from "../globalState/shopNameArray";
 import { ShowDigitalSupportCard } from "../components/ShowDigitalSupportCard";
 import { showDigitalSupportAchievements } from "../globalState/selector/showDigitalSupportAchievements";
 import { tabIndexState } from "../globalState/tabIndexState";
+import { useRouter } from "next/router";
+import { useUser } from "@auth0/nextjs-auth0";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
@@ -31,6 +33,11 @@ const supabase: SupabaseClient = createClient(
 );
 
 const DigitalSupport = ({ digital_support }) => {
+	const router = useRouter();
+	const { user } = useUser();
+	if (!user) {
+		typeof window === "undefined" ? undefined : router.replace("/api/auth/login");
+	}
 	const setDigitalSupportAchievements = useSetRecoilState(digitalSupportState);
 	useEffect(() => {
 		setDigitalSupportAchievements([...digital_support]);
