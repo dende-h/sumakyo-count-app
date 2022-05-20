@@ -3,10 +3,10 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { memo, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { achievementsArray } from "../globalState/achievementsArray";
-import { isLoadingState } from "../globalState/isLoadingState";
-import { useCountUpDown } from "../hooks/useCountUpDown";
-import { userCount } from "../pages";
+import { achievementsArray } from "../../globalState/achievementsArray";
+import { isLoadingState } from "../../globalState/isLoadingState";
+import { useCountUpDown } from "../../hooks/useCountUpDown";
+import { userCount } from "../../pages";
 
 type Props = {
 	editItem: userCount;

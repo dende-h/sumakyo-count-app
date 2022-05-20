@@ -1,5 +1,5 @@
 import { memo, ReactNode, VFC } from "react";
-import { Header } from "../Header";
+import { Header } from "../index/Header";
 
 type Props = {
 	children: ReactNode;

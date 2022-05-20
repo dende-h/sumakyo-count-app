@@ -2,9 +2,9 @@ import { EditIcon } from "@chakra-ui/icons";
 import { IconButton, Modal, ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { memo, useRef, VFC } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { dateState } from "../globalState/dateState";
-import { digitalSupport } from "../globalState/digitalSupportState";
-import { isLoadingState } from "../globalState/isLoadingState";
+import { dateState } from "../../globalState/dateState";
+import { digitalSupport } from "../../globalState/digitalSupportState";
+import { isLoadingState } from "../../globalState/isLoadingState";
 import { EditShowDigitalSupportCard } from "./EditShowDigitalSupportCard";
 
 type Props = {

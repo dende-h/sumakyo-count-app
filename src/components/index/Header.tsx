@@ -1,6 +1,6 @@
 import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
 import { memo } from "react";
-import { DrawerMenu } from "./DrawerMenu";
+import { DrawerMenu } from "../templates/DrawerMenu";
 
 export const Header = memo(() => {
 	return (

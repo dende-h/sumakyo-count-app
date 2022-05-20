@@ -14,8 +14,8 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { memo, VFC } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import { goalValueState } from "../globalState/goalValueState";
-import { isLoadingState } from "../globalState/isLoadingState";
+import { achievementsArray } from "../../globalState/achievementsArray";
+import { isLoadingState } from "../../globalState/isLoadingState";
 
 type Props = {
 	id: number;
@@ -27,27 +27,27 @@ const supabase: SupabaseClient = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_KEY
 );
 
-export const DeleteGoalsRowModal: VFC<Props> = memo((props: Props) => {
+export const DeleteRowModal: VFC<Props> = memo((props: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	//削除対象行のidを受け取る
 	const { id } = props;
 	//ローディングの状態を表すグローバルステイト
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 	//削除時に編集するachievementsのグローバルステイト配列
-	const [goals, setGoals] = useRecoilState(goalValueState);
+	const [achievements, setAchievements] = useRecoilState(achievementsArray);
 
 	const onClickDeleteButton = async () => {
 		setIsLoading(true);
-		const { data, error } = await supabase.from("goal_value").delete().eq("id", id);
+		const { data, error } = await supabase.from("achievements").delete().eq("id", id);
 		if (error) {
 			toast.error(error.message);
 		}
 		if (data) {
 			toast.success("削除完了しました");
-			const newGoals = goals.filter((item) => {
+			const newAchievements = achievements.filter((item) => {
 				return item.id !== id;
 			});
-			setGoals(newGoals);
+			setAchievements(newAchievements);
 			onClose();
 		}
 		setIsLoading(false);

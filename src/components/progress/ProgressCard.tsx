@@ -1,6 +1,6 @@
 import { Divider, Stack, Text, Box, Flex } from "@chakra-ui/react";
 import { memo } from "react";
-import { goal } from "../pages/goal_setting";
+import { goal } from "../../pages/goal_setting";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 

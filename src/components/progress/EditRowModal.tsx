@@ -2,8 +2,8 @@ import { EditIcon } from "@chakra-ui/icons";
 import { IconButton, Modal, ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { memo, VFC } from "react";
 import { useRecoilValue } from "recoil";
-import { isLoadingState } from "../globalState/isLoadingState";
-import { userCount } from "../pages";
+import { isLoadingState } from "../../globalState/isLoadingState";
+import { userCount } from "../../pages";
 import { EditItemsCard } from "./EditItemsCard";
 
 type Props = {

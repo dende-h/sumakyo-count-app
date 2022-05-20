@@ -1,6 +1,6 @@
 import { Divider, Stack, Text, WrapItem } from "@chakra-ui/react";
 import { memo, VFC } from "react";
-import { userCount } from "../pages";
+import { userCount } from "../../pages";
 
 type Props = {
 	achievement?: userCount;
