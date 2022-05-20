@@ -131,7 +131,6 @@ const Index = () => {
 		setIsLoading(true);
 		const { error } = await supabase.from("year_month").insert(yearMonth);
 		if (error) {
-			console.log(error);
 			toast.error(error.message);
 			setIsLoading(false);
 		} else {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export const useCountUpDown = () => {
-	const [count, setCount] = useState<number>(0);
+export const useCountUpDown = (props?: number) => {
+	const [count, setCount] = useState<number>(props ? props : 0);
 
 	const upButtonClick = () => {
 		setCount(count + 1);

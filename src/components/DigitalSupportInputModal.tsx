@@ -15,7 +15,7 @@ import {
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import React, { memo, useEffect, useState, VFC } from "react";
 import toast from "react-hot-toast";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { dateState } from "../globalState/dateState";
 import { digitalSupportEventArray } from "../globalState/digitalSupportEventArray";
 import { digitalSupport, digitalSupportState } from "../globalState/digitalSupportState";
@@ -26,29 +26,32 @@ import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import { CustomDatePickerCalendar } from "./CustomDatePickerCalendar";
 import { InputItemsCard } from "./InputItemsCard";
 
-type Props = {
-	digital_support: digitalSupport[];
-};
-
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_URL,
 	process.env.NEXT_PUBLIC_SUPABASE_KEY
 );
 
-export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
+export const DigitalSupportInputModal: VFC = memo(() => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	//編集対象のオブジェクトを受け取る
-	const { digital_support } = props;
-
-	const cancel = () => {
-		onClose();
-	};
 
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
-	console.log(digital_support);
 
-	const [digitalSupportAchievements, setDigitalSuportAchievements] = useRecoilState(digitalSupportState);
+	const setDigitalSuportAchievements = useSetRecoilState(digitalSupportState);
+
+	const initialShopNameList = useRecoilValue(shopNameArray);
+	const shopNameList = initialShopNameList.filter((item) => {
+		return item !== "全店舗";
+	});
+
+	const eventNameList = useRecoilValue(digitalSupportEventArray);
+
+	const eventName = useSelectOnChange("");
+	const [halfCount, setHalfCount] = useState(false);
+	const participants = useCountUpDown(0);
+	const shopName = useSelectOnChange("");
+	const inputDate = useRecoilValue(dateState);
+
 	const [digitalSupportAchievement, setDigitalSupportAchievement] = useState<digitalSupport>({
 		event_name: "",
 		participants: 0,
@@ -57,23 +60,30 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 		half_count: false
 	});
 
-	const initialShopNameList = useRecoilValue(shopNameArray);
-	const shopNameList = initialShopNameList.filter((item) => {
-		return item !== "全店舗";
-	});
-	console.log(shopNameList);
-	const eventNameList = useRecoilValue(digitalSupportEventArray);
-
 	useEffect(() => {
-		setDigitalSuportAchievements(digital_support);
-	}, []);
-	console.log(digitalSupportAchievements);
+		if (isOpen) {
+			eventName.setValue("");
+			setHalfCount(false);
+			participants.setCount(0);
+			shopName.setValue("");
+		} else {
+			setDigitalSupportAchievement({
+				event_name: "",
+				participants: 0,
+				event_date: "",
+				shop_name: "",
+				half_count: false
+			});
+			eventName.setValue("");
+			setHalfCount(false);
+			participants.setCount(0);
+			shopName.setValue("");
+		}
+	}, [isOpen]);
 
-	const eventName = useSelectOnChange();
-	const [halfCount, setHalfCount] = useState(false);
-	const participants = useCountUpDown();
-	const shopName = useSelectOnChange();
-	const inputDate = useRecoilValue(dateState);
+	const cancel = () => {
+		onClose();
+	};
 
 	useEffect(() => {
 		setDigitalSupportAchievement({
@@ -102,14 +112,13 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 				setDigitalSuportAchievements(newDigitalSupport);
 			}
 			toast.success("登録完了しました");
-			participants.setCount(0);
 			setIsLoading(false);
 			cancel();
 		}
-		console.log(digitalSupportAchievement);
 	};
 	//開いたときにフォーカスを当てるフォームを指定するための変数
 	const initialRef = React.useRef();
+
 	return (
 		<>
 			<Button onClick={onOpen} colorScheme="teal" isDisabled={isLoading} isLoading={isLoading}>
@@ -179,7 +188,7 @@ export const DigitalSupportInputModal: VFC<Props> = memo((props: Props) => {
 								<Button
 									onClick={onSubmit}
 									colorScheme="teal"
-									isDisabled={isLoading || shopName.value === "" || eventName.value === ""}
+									isDisabled={isLoading || shopName.value === "" || eventName.value === "" || participants.count <= 0}
 									isLoading={isLoading}
 								>
 									送信
