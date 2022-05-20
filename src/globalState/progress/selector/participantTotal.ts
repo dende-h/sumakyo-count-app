@@ -1,6 +1,6 @@
 import { selector } from "recoil";
-import { onSelectedShopName } from "../onSelectedShopName";
-import { digitalSupportState } from "../digitalSupportState";
+import { onSelectedShopName } from "../../index/onSelectedShopName";
+import { digitalSupportState } from "../../digitalSupport/digitalSupportState";
 
 export const participantTotal = selector({
 	key: "participantTotal ",

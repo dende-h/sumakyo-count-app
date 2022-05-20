@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { onSelectedShopName } from "../globalState/onSelectedShopName";
-import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
-import { shopNameArray } from "../globalState/shopNameArray";
+import { onSelectedShopName } from "../globalState/index/onSelectedShopName";
+import { onSelectYearMonthState } from "../globalState/index/onSelectYearMonthState";
+import { selectOptionYearMonth } from "../globalState/index/selectOptionYearMonth";
+import { shopNameArray } from "../globalState/index/shopNameArray";
 import { yearMonth } from "../pages";
 import { useSelectOnChange } from "./useSelectOnChange";
 

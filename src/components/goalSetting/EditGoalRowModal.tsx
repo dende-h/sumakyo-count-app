@@ -2,7 +2,7 @@ import { EditIcon } from "@chakra-ui/icons";
 import { IconButton, Modal, ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { memo, VFC } from "react";
 import { useRecoilValue } from "recoil";
-import { isLoadingState } from "../../globalState/isLoadingState";
+import { isLoadingState } from "../../globalState/index/isLoadingState";
 import { goal } from "../../pages/goal_setting";
 import { EditGoalItemsCard } from "./EditGoalItemsCard";
 

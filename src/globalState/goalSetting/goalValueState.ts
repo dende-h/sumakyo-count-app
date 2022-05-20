@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { goal } from "../pages/goal_setting";
+import { goal } from "../../pages/goal_setting";
 
 const initialData: goal[] = [
 	{

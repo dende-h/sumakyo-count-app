@@ -1,9 +1,6 @@
 import { selector } from "recoil";
-import { achievementsArray } from "../achievementsArray";
 import { digitalSupport, digitalSupportState } from "../digitalSupportState";
-import { onSelectedShopName } from "../onSelectedShopName";
-import { onSelectYearMonthState } from "../onSelectYearMonthState";
-import { shopNameArray } from "../shopNameArray";
+import { shopNameArray } from "../../index/shopNameArray";
 import { tabIndexState } from "../tabIndexState";
 
 export const showDigitalSupportAchievements = selector({

@@ -1,7 +1,7 @@
 import { selector } from "recoil";
 import { achievementsArray } from "../achievementsArray";
-import { dateState } from "../dateState";
-import { onSelectedShopName } from "../onSelectedShopName";
+import { dateState } from "../../index/dateState";
+import { onSelectedShopName } from "../../index/onSelectedShopName";
 
 export const dateOfAchievement = selector({
 	key: " dateOfAchievement  ",

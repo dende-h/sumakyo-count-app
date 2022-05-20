@@ -1,6 +1,6 @@
 import { Divider, Stack, Text, Wrap, WrapItem, HStack, VStack } from "@chakra-ui/react";
 import { memo, VFC } from "react";
-import { digitalSupport } from "../../globalState/digitalSupportState";
+import { digitalSupport } from "../../globalState/digitalSupport/digitalSupportState";
 import { DeleteDigitalSupportModal } from "./DeleteDigitalSupportModal";
 import { EditShowDigitalSupportModal } from "./EditShowDigitalSupportModal";
 

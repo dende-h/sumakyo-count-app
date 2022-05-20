@@ -27,26 +27,26 @@ import {
 	PopoverCloseButton
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { goalValueState } from "../globalState/goalValueState";
-import { dateState } from "../globalState/dateState";
+import { goalValueState } from "../globalState/goalSetting/goalValueState";
+import { dateState } from "../globalState/index/dateState";
 import { useEffect, useState } from "react";
-import { ProgressCard } from "../components/ProgressCard";
-import { onSelectedShopName } from "../globalState/onSelectedShopName";
-import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { dateOfAchievement } from "../globalState/selector/dateOfAchievement";
-import { DailyCard } from "../components/DailyCard";
-import { EditGoalRowModal } from "../components/EditGoalRowModal";
-import { DeleteGoalsRowModal } from "../components/DeleteGoalsRowModal";
+import { ProgressCard } from "../components/progress/ProgressCard";
+import { onSelectedShopName } from "../globalState/index/onSelectedShopName";
+import { onSelectYearMonthState } from "../globalState/index/onSelectYearMonthState";
+import { dateOfAchievement } from "../globalState/progress/selector/dateOfAchievement";
+import { DailyCard } from "../components/progress/DailyCard";
+import { EditGoalRowModal } from "../components/goalSetting/EditGoalRowModal";
+import { DeleteGoalsRowModal } from "../components/goalSetting/DeleteGoalsRowModal";
 import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/router";
-import { EditRowModal } from "../components/EditRowModal";
-import { DeleteRowModal } from "../components/DeleteRowModal";
+import { EditRowModal } from "../components/progress/EditRowModal";
+import { DeleteRowModal } from "../components/progress/DeleteRowModal";
 import { format } from "date-fns";
-import { DashBoardCard } from "../components/DashBoardCard";
-import { TotalIncomeCard } from "../components/TotalIncomeCard";
-import { TotalFeeCard } from "../components/TotalFeeCard";
-import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
-import { NewUserRate } from "../components/NewUserRate";
+import { DashBoardCard } from "../components/progress/DashBoardCard";
+import { TotalIncomeCard } from "../components/progress/TotalIncomeCard";
+import { TotalFeeCard } from "../components/progress/TotalFeeCard";
+import { CustomDatePickerCalendar } from "../components/index/CustomDatePickerCalendar";
+import { NewUserRate } from "../components/progress/NewUserRate";
 
 //supabaseのAPI定義
 const supabase: SupabaseClient = createClient(

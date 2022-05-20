@@ -2,15 +2,15 @@ import { Box, Button, Divider, Select, Stack, Text, Wrap, WrapItem } from "@chak
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useCountUpDown } from "../hooks/useCountUpDown";
-import { CustomDatePickerCalendar } from "../components/CustomDatePickerCalendar";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { dateState } from "../globalState/dateState";
+import { CustomDatePickerCalendar } from "../components/index/CustomDatePickerCalendar";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { dateState } from "../globalState/index/dateState";
 import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import toast from "react-hot-toast";
-import { shopNameArray } from "../globalState/shopNameArray";
-import { InputItemsCard } from "../components/InputItemsCard";
+import { shopNameArray } from "../globalState/index/shopNameArray";
+import { InputItemsCard } from "../components/index/InputItemsCard";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-import { isLoadingState } from "../globalState/isLoadingState";
+import { isLoadingState } from "../globalState/index/isLoadingState";
 
 export type yearMonth = {
 	id?: number;

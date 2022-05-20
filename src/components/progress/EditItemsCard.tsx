@@ -3,8 +3,8 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { memo, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { achievementsArray } from "../../globalState/achievementsArray";
-import { isLoadingState } from "../../globalState/isLoadingState";
+import { achievementsArray } from "../../globalState/progress/achievementsArray";
+import { isLoadingState } from "../../globalState/index/isLoadingState";
 import { useCountUpDown } from "../../hooks/useCountUpDown";
 import { userCount } from "../../pages";
 

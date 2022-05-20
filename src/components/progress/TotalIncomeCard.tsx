@@ -1,7 +1,7 @@
 import { Divider, Stack, Text } from "@chakra-ui/react";
 import { memo } from "react";
 import { useRecoilValue } from "recoil";
-import { achievementTotalArray } from "../../globalState/selector/achievementTotalArray";
+import { achievementTotalArray } from "../../globalState/progress/selector/achievementTotalArray";
 
 export const TotalIncomeCard = memo(() => {
 	//ユニークユーザーと新規ユーザーの手数料の金額定義

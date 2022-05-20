@@ -16,13 +16,13 @@ import {
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { DigitalSupportInputModal } from "../components/DigitalSupportInputModal";
-import { digitalSupportEventArray } from "../globalState/digitalSupportEventArray";
-import { digitalSupportState } from "../globalState/digitalSupportState";
-import { shopNameArray } from "../globalState/shopNameArray";
-import { ShowDigitalSupportCard } from "../components/ShowDigitalSupportCard";
-import { showDigitalSupportAchievements } from "../globalState/selector/showDigitalSupportAchievements";
-import { tabIndexState } from "../globalState/tabIndexState";
+import { DigitalSupportInputModal } from "../components/digitalSupport/DigitalSupportInputModal";
+import { digitalSupportEventArray } from "../globalState/digitalSupport/digitalSupportEventArray";
+import { digitalSupportState } from "../globalState/digitalSupport/digitalSupportState";
+import { shopNameArray } from "../globalState/index/shopNameArray";
+import { ShowDigitalSupportCard } from "../components/digitalSupport/ShowDigitalSupportCard";
+import { showDigitalSupportAchievements } from "../globalState/digitalSupport/selector/showDigitalSupportAchievements";
+import { tabIndexState } from "../globalState/digitalSupport/tabIndexState";
 import { useRouter } from "next/router";
 import { useUser } from "@auth0/nextjs-auth0";
 

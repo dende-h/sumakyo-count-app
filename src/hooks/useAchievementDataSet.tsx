@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { achievementsArray } from "../globalState/achievementsArray";
-import { achievementTotalArray } from "../globalState/selector/achievementTotalArray";
-import { showAchievementsTableArray } from "../globalState/selector/showAchievementsTabeleArray";
+import { achievementsArray } from "../globalState/progress/achievementsArray";
+import { achievementTotalArray } from "../globalState/progress/selector/achievementTotalArray";
+import { showAchievementsTableArray } from "../globalState/progress/selector/showAchievementsTabeleArray";
 
 export const useAchievementDataSet = ({ achievements }) => {
 	//実績データの取得とglobalStateへの登録

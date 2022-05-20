@@ -7,7 +7,7 @@ import getMonth from "date-fns/getMonth";
 import getYear from "date-fns/getYear";
 import _ from "lodash";
 import { useSetRecoilState } from "recoil";
-import { dateState } from "../../globalState/dateState";
+import { dateState } from "../../globalState/index/dateState";
 
 registerLocale("ja", ja);
 

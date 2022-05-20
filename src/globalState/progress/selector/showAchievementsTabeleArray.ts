@@ -1,7 +1,7 @@
 import { selector } from "recoil";
 import { achievementsArray } from "../achievementsArray";
-import { onSelectedShopName } from "../onSelectedShopName";
-import { onSelectYearMonthState } from "../onSelectYearMonthState";
+import { onSelectedShopName } from "../../index/onSelectedShopName";
+import { onSelectYearMonthState } from "../../index/onSelectYearMonthState";
 
 export const showAchievementsTableArray = selector({
 	key: "showAchievementsTableArray ",

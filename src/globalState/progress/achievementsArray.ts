@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { userCount } from "../pages";
+import { userCount } from "../../pages";
 
 //データ初期化
 const initialDate: userCount[] = [

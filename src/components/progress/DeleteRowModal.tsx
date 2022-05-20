@@ -14,8 +14,8 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { memo, VFC } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import { achievementsArray } from "../../globalState/achievementsArray";
-import { isLoadingState } from "../../globalState/isLoadingState";
+import { achievementsArray } from "../../globalState/progress/achievementsArray";
+import { isLoadingState } from "../../globalState/index/isLoadingState";
 
 type Props = {
 	id: number;

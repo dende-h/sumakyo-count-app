@@ -4,15 +4,9 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { yearMonth } from ".";
-import { isLoadingState } from "../globalState/isLoadingState";
-import { onSelectYearMonthState } from "../globalState/onSelectYearMonthState";
-import { selectOptionYearMonth } from "../globalState/selectOptionYearMonth";
-import { shopNameArray } from "../globalState/shopNameArray";
-
+import { useRecoilState } from "recoil";
+import { isLoadingState } from "../globalState/index/isLoadingState";
 import { useInputValue } from "../hooks/userInputValue";
-import { useSelectOnChange } from "../hooks/useSelectOnChange";
 import { useYearMonthDataSet } from "../hooks/useYearMonthDataSet";
 
 //supabaseのAPI定義
