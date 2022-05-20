@@ -33,6 +33,14 @@ export const EditShowDigitalSupportCard: VFC<Props> = memo((props: Props) => {
 		onClickCancel();
 	};
 
+	const eventNameList = useRecoilValue(digitalSupportEventArray);
+
+	const eventName = useSelectOnChange(editItem.event_name);
+	const [halfCount, setHalfCount] = useState(false);
+	const participants = useCountUpDown(editItem.participants);
+	const shopName = useSelectOnChange(editItem.shop_name);
+	const inputDate = useRecoilValue(dateState);
+
 	const [isLoading, setIsLoading] = useRecoilState(isLoadingState);
 	const setDigitalSuportAchievements = useSetRecoilState(digitalSupportState);
 	const [digitalSupportAchievement, setDigitalSupportAchievement] = useState<digitalSupport>({
@@ -47,20 +55,6 @@ export const EditShowDigitalSupportCard: VFC<Props> = memo((props: Props) => {
 	const shopNameList = initialShopNameList.filter((item) => {
 		return item !== "全店舗";
 	});
-
-	const eventNameList = useRecoilValue(digitalSupportEventArray);
-
-	const eventName = useSelectOnChange();
-	const [halfCount, setHalfCount] = useState(false);
-	const participants = useCountUpDown();
-	const shopName = useSelectOnChange();
-	const inputDate = useRecoilValue(dateState);
-	useEffect(() => {
-		eventName.setValue(editItem.event_name);
-		participants.setCount(editItem.participants);
-		setHalfCount(editItem.half_count);
-		shopName.setValue(editItem.shop_name);
-	}, []);
 
 	useEffect(() => {
 		setDigitalSupportAchievement({
@@ -161,7 +155,7 @@ export const EditShowDigitalSupportCard: VFC<Props> = memo((props: Props) => {
 						<Button
 							onClick={onSubmit}
 							colorScheme="teal"
-							isDisabled={isLoading || shopName.value === "" || eventName.value === ""}
+							isDisabled={isLoading || shopName.value === "" || eventName.value === "" || participants.count <= 0}
 							isLoading={isLoading}
 						>
 							更新

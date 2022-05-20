@@ -7,7 +7,7 @@ const initialDigitalSupportNameArray = [
 	"オンライン診療講座",
 	"ワクチンパスポート発行講座",
 	"ワクチン接種WEB申し込み",
-	"相談会"
+	"デジタル活用操作相談会"
 ];
 
 export const digitalSupportEventArray = atom({
